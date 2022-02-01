@@ -1,6 +1,6 @@
 # TipMeACoffee
 TipMeACoffee is next generation social media platform developed by community for community and run under Breeze Foundation DAO.
-Besocial is developed on top of Breeze Blockchain with proof of likes mechanism. 
+TipMeACoffee web front is developed on top of Breeze Blockchain with proof of likes mechanism. 
 
 ## Installation
 TipMeACoffee is a node.js application developed using ExpressJs framework.
