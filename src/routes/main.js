@@ -16,14 +16,6 @@ const randomstring = require("randomstring")
 
 const router = express.Router()
 const helper = require('./helper')
-/*
-const accountRouter = require('./accounts')
-router.use('/loginuser',accountRouter.login)
-router.use('/logout',accountRouter.logout)
-router.use('/signup',accountRouter.signup)
-router.use('/keygen',accountRouter.keygen)
-router.use('/verify/:token',accountRouter.verify)
-*/
 var msgkey = process.env.msgKey; var iv = process.env.breezval;
 const api_url = helper.api
 const fetchTags = helper.getTags
@@ -33,12 +25,6 @@ const getAccountPub = (username) => { return new Promise((res, rej) => { breej.g
 const validateToken = async(username, token) => {if(!username || !token) return false; try { var decrypted = CryptoJS.AES.decrypt(token, msgkey, { iv: iv }); return breej.privToPub(decrypted.toString(CryptoJS.enc.Utf8)) === await getAccountPub(username); }catch(err){return false;} }
 const nkey = async(token) => {try{let decrypted = CryptoJS.AES.decrypt(token, msgkey, { iv: iv }); let uKey = decrypted.toString(CryptoJS.enc.Utf8);return uKey;}catch(err){return false;} }
 
-/*
-router.get('/post/:name/:link', helper.cache(30), async (req, res) => {let author = req.params.name; let link = req.params.link; let nTags = await fetchTags(); let postAPI = await axios.get(api_url+`/content/${author}/${link}`);
-  let post_category = postAPI.data.json.category; let simAPI = await axios.get(api_url+`/new?category=${post_category}`);let userAPI = await axios.get(api_url+`/account/${author}`); let post_title = postAPI.data.json.title; res.locals.title = post_title;let post_body = postAPI.data.json.body.replace(/"/g, "'"); let post_description = post_body.split(" ").splice(0,60).join(" ");  res.locals.description = post_description;let post_link = postAPI.data._id;res.locals.link='https://tipmeacoffee.com/post/'+post_link;let post_img = postAPI.data.json.image;res.locals.image=post_img;let domain = getBaseUrl(postAPI.data.json.url);
-  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let actAPI = await axios.get(api_url+`/account/${loguser}`);let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); res.render('post', { article: postAPI.data, simPosts: simAPI.data, moment: moment, trendingTags: nTags, loguser: loguser, acct: actAPI.data, user: userAPI.data, category: category,notices:noticeAPI.count, domain: domain }) } else { loguser = ""; res.render('post', { article: postAPI.data, simPosts: simAPI.data, moment: moment, trendingTags: nTags, loguser: loguser, user: userAPI.data, category: category, domain: domain }) }
-})
-*/
 router.get('', async (req, res) => { res.locals.title='TipMeACoffee - Share To Earn'; res.locals.description='TipMeACoffee - A social media platform built on blockchain where you share to earn TMAC tokens. Share what you like - Earn if community likes it.';
   let index = req.query.index | 0; let postsAPI = await axios.get(api_url+`/new/${index}`); let nTags = await fetchTags(); let promotedAPI = await axios.get(api_url+`/promoted`); let promotedData = []; let finalData = postsAPI.data; 
   if (promotedAPI.data.length > 0) promotedData = promotedAPI.data.slice(0, 3).map(x => ({ ...x, __promoted: true }));
