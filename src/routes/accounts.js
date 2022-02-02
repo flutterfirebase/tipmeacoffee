@@ -1,6 +1,5 @@
 const express = require('express')
-const router = express.Router()
-const cookieParser = require('cookie-parser')
+
 const emailValidator = require("email-validator");
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
@@ -14,7 +13,7 @@ const fetchTags = helper.getTags
 const category = helper.categories
 const getAccountPub = (username) => { return new Promise((res, rej) => { breej.getAccount(username, function (error, account) { if(error) rej(error); if(!account) rej(); if(account.pub) res(account.pub);}) })}
 const validateToken = async(username, token) => {if(!username || !token) return false; try { var decrypted = CryptoJS.AES.decrypt(token, msgkey, { iv: iv }); return breej.privToPub(decrypted.toString(CryptoJS.enc.Utf8)) === await getAccountPub(username); }catch(err){return false;} }
-router.use(cookieParser())
+
 const msgkey = process.env.msgKey; const iv = process.env.breezval;
 MongoClient.connect(db_url, function(err, client) { assert.equal(null, err);console.log("Connected successfully to server"); db = client.db(dbName); });
 
