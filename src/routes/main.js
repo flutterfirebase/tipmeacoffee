@@ -169,6 +169,7 @@ router.post('/share', async (req, res) => {
     } else { let domainName = getBaseUrl(post.url);
       if(helper.sites.includes(domainName)){res.send({ error: true, message: 'Sharing from this url is not allowed' });
       } else {
+        try{
         (async () => {
           var result = await Meta.parser(post.url);
           if(result){let url_data = result['og']; 
@@ -176,6 +177,7 @@ router.post('/share', async (req, res) => {
             } else {res.send({ error: false, meta: url_data, link: domainName });}
           } else {res.send({ error: true, message: 'Unable to Parse URL' });}
         })();
+        } catch (error) { res.send({ error: true, message: error['error'] }) }
       }
     }
   } else { res.send({ error: true, message: 'phew.. User Validation Fails' }); }   
