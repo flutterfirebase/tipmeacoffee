@@ -7,11 +7,8 @@
                     <%- include('./common/topnav') %>
                     <div class="inner-wrapper">
                         <div class="post-header-wrapper back_sec"><div class="back_btn"><span class="middle-header-content">#<%- calledTag %></span></div></div>
-                        <%  articles.forEach(function(article) { 
-                            if(article.user)
-                            let tags = article.json.tags;
-                            let metatags = tags.map(s => '<a href="/tags/'+s+'">#'+s+'</a>').join(' ');
-                            let catg = article.json.category; let category = catg.charAt(0).toUpperCase() + catg.slice(1);let upvotes=JSON.stringify(article.votes); %>
+                        <%  articles.forEach(function(article) {
+                            let tags = article.json.tags;let metatags = tags.map(s => '<a href="/tags/'+s+'">#'+s+'</a>').join(' ');let catg = article.json.category; let category = catg.charAt(0).toUpperCase() + catg.slice(1);let upvotes=JSON.stringify(article.votes); %>
                         <div>
                             <div class="inner-card-wrapper">
                                 <div class="card-userPic-wrapper">
