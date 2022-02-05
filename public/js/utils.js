@@ -144,7 +144,7 @@ $('.trans_tab').on('click', function() { $('.trans_tab').addClass('activeTab'); 
 $('.keys_tab').on('click', function() {$('.keys_tab').addClass('activeTab'); $('.trans_tab').removeClass('activeTab'); $('#trans_sec').hide(); $('#keys_sec').show(); });
 let trimString = function (string, length) {return string.length > length ? string.substring(0, length) : string;};
 
-let promoted_api='https:api.breezechain.org/promoted';
+let promoted_api='https://api.breezechain.org/promoted';
 async function getapi(url) { const response = await fetch(url);const data = await response.json(); if(data.length>0) {let first = (data[0].promoted)/1000000;$('.min_boost').html('Bid more than ' + first + ' TOK to be on top')} else{$('.min_boost').html('Min bid is 0.1 TOK')}; }; getapi(promoted_api);
 
 var index = 20;

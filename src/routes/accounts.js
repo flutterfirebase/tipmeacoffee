@@ -17,7 +17,7 @@ const validateToken = async(username, token) => {if(!username || !token) return 
 const msgkey = process.env.msgKey; const iv = process.env.breezval;
 MongoClient.connect(db_url, function(err, client) { assert.equal(null, err);console.log("Connected successfully to server"); db = client.db(dbName); });
 
-async function logout(req, res) { try { res.clearCookie('breeze_username'); res.clearCookie('token'); res.send({ error: false }); console.log('logout') } catch (error) { res.send({ error: true, message: error['error'] }) } }
+async function logout(req, res) { try { res.clearCookie('breeze_username'); res.clearCookie('token'); res.send({ error: false }); } catch (error) { res.send({ error: true, message: error['error'] }) } }
 
 async function login(req, res) {
     try {
