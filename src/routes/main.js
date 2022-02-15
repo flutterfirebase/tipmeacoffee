@@ -96,13 +96,10 @@ router.get('/trending', async (req, res) => {
   if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let actAPI = await axios.get(api_url+`/account/${loguser}`);let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); res.render('trending', { articles: _finalData, moment: moment, trendingTags: nTags, loguser: loguser, acct: actAPI.data, category: category, notices:noticeAPI.data.count}) } else { loguser = ""; res.render('trending', { articles: _finalData, moment: moment, trendingTags: nTags, loguser: loguser, category: category }) }
 })
 
-
-
 router.get('/notifications', async (req, res) => {
   if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { 
-    res.locals.page = "notifications"; let user = req.cookies.breeze_username;let send_data = [];
-    let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${user}`);let historyAPI = await axios.get(api_url+`/history/${user}/0`);let actAPI = await axios.get(api_url+`/account/${user}`); let nTags = await fetchTags(); let temps = historyAPI.data;
-    temps.forEach(function (temp) { send_data.push(helper.data_process(temp.txs[0])+ " " + "<a href='https://breezescan.io/#/tx/"+ temp.txs[0].hash +"' target='_blank'><span class='trx_id'>" + temp.txs[0].hash.substring(0,6) + "</span></a>"); });
+    res.locals.page = "notifications"; let user = req.cookies.breeze_username;let send_data = [];let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${user}`);let historyAPI = await axios.get(api_url+`/history/${user}/0`);let actAPI = await axios.get(api_url+`/account/${user}`); let nTags = await fetchTags(); let temps = historyAPI.data;
+    temps.forEach(function (temp) { send_data.push(helper.data_process(temp)+ " " + "<a href='https://breezescan.io/#/tx/"+ temp.hash +"' target='_blank'><span class='trx_id'>" + temp.hash.substring(0,6) + "</span></a>"); });
     res.render('notifications', { activities: send_data, acct: actAPI.data, trendingTags: nTags, loguser: user, category: category, notices:noticeAPI.data.count })
   } else { res.redirect('/welcome');}
 })
