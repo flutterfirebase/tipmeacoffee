@@ -3,7 +3,7 @@ const breej = require('breej')
 const CryptoJS = require("crypto-js")
 const axios = require('axios')
 const moment = require('moment')
-const { getBaseUrl } = require("get-base-url")
+const tldts = require("tldts");
 const helper = require('./helper')
 const fetchTags = helper.getTags
 const api_url = helper.api
@@ -24,7 +24,7 @@ async function page(req, res) {
   		res.locals.description = post_description;
   		let post_link = postAPI.data._id;res.locals.link='https://tipmeacoffee.com/post/'+post_link;
   		let post_img = postAPI.data.json.image;res.locals.image=post_img;
-  		let domain = getBaseUrl(postAPI.data.json.url);
+        let newUrl = tldts.parse(postAPI.data.json.url); let domain=newUrl.domain;
   		if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username;let actAPI = await axios.get(api_url+`/account/${loguser}`);let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); res.render('post', {article: postAPI.data, simPosts: simAPI.data, moment: moment, trendingTags: nTags, loguser: loguser, acct: actAPI.data, user: userAPI.data, category: category,notices:noticeAPI.count, domain: domain }) } else { loguser = ""; res.render('post', { article: postAPI.data, simPosts: simAPI.data, moment: moment, trendingTags: nTags, loguser: loguser, user: userAPI.data, category: category, domain: domain }) }
     } catch (error) { console.log(error);res.send({ error: true, message: error['error'] }) }
 }

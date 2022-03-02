@@ -22,7 +22,7 @@ var cache = (duration) => {
     }
   }
 }
-var sites = ["wikipedia.org","facebook.com","youtube.com", "pinterest.com","twitter.com","bloomberg.com","youtu.be","pornhub.com","imgur.com","amazon.com","imgbb.com","freepik.com"];
+var sites = ["wikipedia.org","facebook.com","tiktok.com", "pinterest.com","twitter.com","bloomberg.com","pornhub.com","imgur.com","amazon.com","imgbb.com","freepik.com"];
 
 const thousandSeperator = (num) => { let num_parts = num.toString().split("."); num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ","); return num_parts.join(".") }
 function aUser(user) { return '<a href="/profile/' + user + '">@' + user + '</a>'}

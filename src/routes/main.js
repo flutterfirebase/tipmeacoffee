@@ -6,17 +6,13 @@ const CryptoJS = require("crypto-js")
 const axios = require('axios')
 const moment = require('moment')
 const pathParse = require("path-parse")
-const Meta = require('html-metadata-parser')
 const isUrl = require("is-url")
 const isImageURL = require('image-url-validator').default;
 const { getBaseUrl } = require("get-base-url")
 const { limit, substr } = require('stringz')
-const getSlug = require('speakingurl')
-const randomstring = require("randomstring")
-
+var msgkey = process.env.msgKey; var iv = process.env.breezval;
 const router = express.Router()
 const helper = require('./helper')
-var msgkey = process.env.msgKey; var iv = process.env.breezval;
 const api_url = helper.api
 const fetchTags = helper.getTags
 const category = helper.categories
@@ -73,7 +69,7 @@ router.get('/wallet', async (req, res) => {res.locals.page = "wallet";
   if (token && await validateToken(req.cookies.breeze_username, token)) { let decrypted = CryptoJS.AES.decrypt(token, msgkey, { iv: iv }); let wifKey = decrypted.toString(CryptoJS.enc.Utf8); let pubKey = breej.privToPub(wifKey);let earnAPI = await axios.get(api_url+`/distributed/${user}/today`); let transferAPI = await axios.get(api_url+`/transfers/${user}`); let userAPI = await axios.get(api_url+`/account/${user}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${user}`);let nTags = await fetchTags(); res.render('wallet', { activities: transferAPI.data, acct: userAPI.data, trendingTags: nTags, loguser: user, earnToday: earnAPI, category: category,wifKey:wifKey,pubKey:pubKey, notices: noticeAPI.data.count }) } else { res.redirect('/welcome'); }
 })
 
-router.get('/share', async (req, res) => {let token = req.cookies.token;
+router.get('/share', async (req, res) => {res.locals.page = "share";let token = req.cookies.token;
   if (!token || !await validateToken(req.cookies.breeze_username, req.cookies.token)) { res.redirect('/welcome'); } else { loguser = req.cookies.breeze_username; let actAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`);let nTags = await fetchTags(); res.render('share', { loguser: loguser, trendingTags: nTags, acct: actAPI.data, category: category, notices: noticeAPI.data.count }) }
 })
 
@@ -134,58 +130,18 @@ router.get('/feed', async (req, res, next) => {
   } else { res.redirect('/'); }
 })
 
-router.post('/post', async (req, res) => {
-  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) {
-    let token = req.cookies.token;let author = req.cookies.breeze_username;let post = req.body;
-    let allowed_tags = /^[a-z\d\s]+$/i;let tags=post.tags.replace(/\s\s+/g, ' ');let tags_arr=tags.trim().split(' ');
-    if(!post.title){res.send({ error: true, message: 'Not a valid title' });
-    } else if (!post.category) {res.send({ error: true, message: 'Category must be selected' });
-    } else if (!allowed_tags.test(tags)) {res.send({ error: true, message: 'Only alphanumeric tags, no Characters.' });
-    } else if (tags_arr.length < 2) {res.send({ error: true, message: 'Add at least two related tags' });
-    } else if (tags_arr.length > 5) {res.send({ error: true, message: 'Maximum 5 tags allowed' });
-    } else if (post.description.length < 50) {res.send({ error: true, message: 'Add description of minimum 50 words' });
-    }else{
-      let permlink = getSlug(post.title);let description=limit(post.description, 118, '')
-      let content = { title: post.title, body: description, category: post.category, url: post.exturl, image: post.image, tags: tags_arr };
-      let newTx = { type: 4, data: { link: permlink, json: content } };let wifKey = await nkey(req.cookies.token);
-      breej.getAccount(author, function (error, account) {
-        if (breej.privToPub(wifKey) !== account.pub) {res.send({ error: true, message: 'Unable to validate user' });
-        } else { newTx = breej.sign(wifKey, author, newTx);
-          breej.sendTransaction(newTx, function (err, response) {
-            if (err === null) { res.send({ error: false }); } else { res.send({ error: true, message: err['error'] }); }
-          })
-        }
-      })
-    }
-  } else { res.send({ error: true, message: 'phew.. User Validation Fails' }); }
-});
-
-router.post('/share', async (req, res) => {
-  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { let post = req.body; 
-    if (!isUrl(post.url)) {res.send({ error: true, message: 'Not a valid URL' });
-    } else { let domainName = getBaseUrl(post.url);
-      if(helper.sites.includes(domainName)){res.send({ error: true, message: 'Sharing from this url is not allowed' });
-      } else {
-        Meta.parser(post.url, function (err, result) {
-          try{
-            if(result){let meta = result['og']; 
-              if(!meta.title){res.send({ error: true, message: 'Phew.. Unable to fetch shared link' });
-              } else {res.send({ error: false, meta: meta, link: domainName });}
-            } else {res.send({ error: true, message: 'Unable to Parse URL' });}
-          } catch (err) { console.log(err); res.send({ error: true, message: err }) }
-        }) 
-      }
-    }
-  } else { res.send({ error: true, message: 'phew.. User Validation Fails' }); }   
-});
-
 router.post('/upvote', async (req, res) => {
   if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { let post = req.body; let voter = req.cookies.breeze_username;
     let newTx = { type: 5, data: { link: post.postLink, author: post.author } };let wifKey = await nkey(req.cookies.token);
     breej.getAccount(voter, function (error, account) {
       if (breej.privToPub(wifKey) !== account.pub) {res.send({ error: true, message: 'Unable to validate user' });
       } else { newTx = breej.sign(wifKey, voter, newTx);
-        breej.sendTransaction(newTx, function (err, response) { if (err === null) { res.send({ error: false }); } else { res.send({ error: true, message: err['error'] }); } })
+        breej.sendTransaction(newTx, async function (err, response){ 
+          if (err === null) { 
+            let postIncomeAPI = await axios.get(api_url+`/content/${post.author}/${post.postLink}`); 
+            let postIncome = postIncomeAPI.data.dist; let likes=postIncomeAPI.data.likes;
+            res.send({ error: false, income: postIncome, likes:likes }); 
+          } else { res.send({ error: true, message: err['error'] }); } })
       }
     })
   } else { res.send({ error: true, message: 'phew.. User Validation Fails' }); }  
@@ -201,7 +157,6 @@ router.post('/witup', async (req, res) => {
     }
   })
 });
-
 
 router.post('/witunup', async (req, res) => {
   let post = req.body;let voter = req.cookies.breeze_username;
@@ -245,7 +200,6 @@ router.post('/follow', async (req, res) => {
     })
   } else { res.send({ error: true, message: 'phew.. User Validation Fails' }); }
 });
-
 
 router.post('/unfollow', async (req, res) => {
   if (await validateToken(req.cookies.breeze_username, req.cookies.token))
@@ -356,7 +310,6 @@ router.post('/transfer', async (req, res) => {
   } else { res.send({ error: true, message: 'phew.. User Validation Fails' }); }
 });
 
-
 router.post('/boost', async (req, res, next) => {
   if (await validateToken(req.cookies.breeze_username, req.cookies.token)) {
     let post = req.body; let sender = req.cookies.breeze_username;let wifKey = await nkey(req.cookies.token);
@@ -406,4 +359,5 @@ router.post('/withdraw', async (req, res) => {
 router.get('/tos', async (req, res) => {let nTags = await fetchTags(); if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); let act = userAPI.data; res.render('common/tos', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: noticeAPI.data.count }); } else { loguser = ""; res.render('common/tos', { trendingTags: nTags, loguser: loguser, category: category }); } });
 router.get('/robots.txt', function (req, res) { res.type('text/plain'); res.send("User-agent: *\nDisallow:"); });
 router.use(async (req, res) => { let nTags = await fetchTags(); if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); let act = userAPI.data; res.status(404).render('common/404', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: noticeAPI.data.count }); } else { loguser = ""; res.status(404).render('common/404', { trendingTags: nTags, loguser: loguser, category: category }); } });
+
 module.exports = router;
