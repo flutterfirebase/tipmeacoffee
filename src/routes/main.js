@@ -21,7 +21,7 @@ const getAccountPub = (username) => { return new Promise((res, rej) => { breej.g
 const validateToken = async(username, token) => {if(!username || !token) return false; try { var decrypted = CryptoJS.AES.decrypt(token, msgkey, { iv: iv }); return breej.privToPub(decrypted.toString(CryptoJS.enc.Utf8)) === await getAccountPub(username); }catch(err){return false;} }
 const nkey = async(token) => {try{let decrypted = CryptoJS.AES.decrypt(token, msgkey, { iv: iv }); let uKey = decrypted.toString(CryptoJS.enc.Utf8);return uKey;}catch(err){return false;} }
 
-router.get('', async (req, res) => { res.locals.title='TipMeACoffee - Share To Earn'; res.locals.description='TipMeACoffee - A social media platform built on blockchain where you share to earn TMAC tokens. Share what you like - Earn if community likes it.';
+router.get('', async (req, res) => { res.locals.title='Tip Me A Coffee - Social Media on Blockchain'; res.locals.description='TipMeACoffee - A social media platform built on blockchain where you share to earn TMAC tokens. Share what you like - Earn if community likes it.';
   let index = req.query.index | 0; let postsAPI = await axios.get(api_url+`/new/${index}`); let nTags = await fetchTags(); let promotedAPI = await axios.get(api_url+`/promoted`); let promotedData = []; let finalData = postsAPI.data; 
   if (promotedAPI.data.length > 0) promotedData = promotedAPI.data.slice(0, 3).map(x => ({ ...x, __promoted: true }));
   if (promotedData.length > 0) finalData.splice(1, 0, promotedData[0]); 
