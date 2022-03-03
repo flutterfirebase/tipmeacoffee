@@ -46,7 +46,7 @@
     "wallet-validator": "^0.3.10"
   },
   "devDependencies": {
-    "yargs-parser": "^21.0.1",
-    "set-value": ">=4.1.0"
+    "set-value": ">=4.1.0",
+    "yargs-parser": "^21.0.1"
   }
 }
