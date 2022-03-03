@@ -1,4 +1,4 @@
-$(".post_link").click(function(e){e.preventDefault();$('.share_options, .editor_section').hide();$('.share_link').show();$('.share_sec_title').html('Share Any Link')});
+$(".post_link").click(function(e){e.preventDefault();$('.share_options, .editor_section').hide();$('.share_link').show();$('.share_sec_title').html('Share Web Links')});
 $(".post_video").click(function(e){e.preventDefault();$('.share_options, .editor_section').hide();$('.share_link').show();$('.share_sec_title').html('Share YouTube Videos')});
 var hashregex = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,30})(\b|\r)/g;
 $('.add_post').click(function() {
