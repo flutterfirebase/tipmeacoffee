@@ -1,26 +1,5 @@
-<%- include('./common/header') %>
-<%  let votesNow = todayVotes.votes; %>
-<script>
-    var countDownDate = 0;
-    function counter() {
-        setInterval(() => {
-            var date = new Date().toLocaleString("en-US", { timeZone: "Europe/London"});
-            var countDownDate = new Date(date);
-            var i = 60; var h = 24 - countDownDate.getHours();
-            if (h < 10) {h = "0" + h;}
-            var m = 59 - countDownDate.getMinutes();
-            if (m < 10) {m = "0" + m;}
-            var s = countDownDate.getSeconds();
-            s = i - s;
-            if (s < 10) {s = "0" + s;}
-            str = h + ":" + m + ":" + s;
-            i++;
-            //document.getElementByClass("dividendCountDown").innerHTML = str;
-            $(".dividendCountDown").html(str);
-        }, 1000);
-    };
-    counter();
-</script>
+<%- include('./common/header'); %>
+<% let votesNow = todayVotes.votes; %>
 <div id="root">
     <div class="body-wrap" style="">
         <main class="main">
@@ -28,49 +7,46 @@
                 <div class="Home-wrapper">
                     <%- include('./common/topnav') %><div class="post-header-wrapper back_sec"><div class="back_btn"><span class="middle-header-content"> Reward Pool</span></div></div>
                     <div class="reward_sec">
-                        <div><h4>TMAC Daily Reward Pool</h4></div>
+                        <div><h4>TMAC Reward Pool Distribution of Breeze Blockchain</h4></div>
                         <div class="reward_msg">
-                            A simple proof of likes network where every like generates 1 TMAC. This token is distributed among all contributors of our community as per the below given reward pool. The more interactions you have, more will be the reward.
+                            A simple proof of likes network where a block (having upvote transaction) generates 0.3 TMAC tokens. These tokens are distributed among all contributors of our community as per the below given pool share.
                         </div>
-                        <div><span class="reward_pool"></span></div>
                         <div class="rewards_daily">
                             <div class="rewards_daily_sec">
                                 <h3>
-                                    <div class="today_pool">Reward Pool Today</div>
-                                    <div class="reward_amount">Likes Till Now: <%- votesNow %>
-                                    </div>
+                                    <!--<div class="reward_amount">Likes Today: <%- votesNow %></div>-->
+                                    <div class="today_pool">Reward Pool Share</div>
                                 </h3>
+                                <p>Tokens generated in each block are distributed as per following share</p>
                                 <form class="reward_form">
                                     <div class="row rewards_fileds">
-                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">Authors </span></div><div><span><%- (votesNow*0.1).toFixed(2) %></span></div>
+                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">Authors </span></div><div><span>12%</span></div>
                                     </div>
                                     <div class="row rewards_fileds">
-                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">Curators </span></div><div><span><%- (votesNow*0.05).toFixed(2) %></span></div>
+                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">Curators </span></div><div><span>8%</span></div>
                                     </div>
                                     <div class="row rewards_fileds">
-                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">Affiliates / Airdrop </span></div><div><span><%- (votesNow*0.05).toFixed(2) %></span></div>
+                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">Affiliates / Airdrop </span></div><div><span>2%</span></div>
                                     </div>
                                     <div class="row rewards_fileds">
-                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">Staking </span></div><div><span><%- (votesNow*0.25).toFixed(2) %></span></div>
+                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">Staking </span></div><div><span>30%</span></div>
                                     </div>
                                     <div class="row rewards_fileds">
-                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">LP Mining </span></div><div><span><%- (votesNow*0.3).toFixed(2) %></span></div>
+                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">LP Mining </span></div><div><span>20%</span></div>
                                     </div>
                                     <div class="row rewards_fileds">
-                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">Witnesses </span></div><div><span><%- (votesNow*0.11).toFixed(2) %></span></div>
+                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">Witnesses </span></div><div><span>15%</span></div>
                                     </div>
                                     <div class="row rewards_fileds">
-                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">DAF </span></div><div><span><%- (votesNow*0.03).toFixed(2) %></span></div>
+                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">DAF </span></div><div><span>2%</span></div>
                                     </div>
                                     <div class="row rewards_fileds">
-                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">Charity </span></div><div><span><%- (votesNow*0.01).toFixed(2) %></span></div>
+                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">Charity </span></div><div><span>1%</span></div>
                                     </div>
-                                    <div class="row rewards_fileds">
-                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">Foundation </span></div><div><span><%- (votesNow*0.1).toFixed(2) %></span></div>
+                                    <div class="row rewards_fileds" style="border-bottom: none;">
+                                        <div><span class="rside_cat_img">.</span><span class="rewards_type">Foundation (DAO) </span></div><div><span>10%</span></div>
                                     </div>
                                 </form>
-                                <p>Time Remaining for Next Reward Pool</p>
-                                <button type="button" class="btn btn-default reward_btn" disabled=""><span class="far fa-clock rewards_clock"></span><span class="dividendCountDown"></span></button>
                             </div>
                         </div>
                     </div>

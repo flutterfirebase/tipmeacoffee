@@ -20,8 +20,8 @@ async function page(req, res) {
   		let userAPI = await axios.get(api_url+`/account/${author}`); 
   		let post_title = postAPI.data.json.title; res.locals.title = post_title;
   		let post_body = postAPI.data.json.body.replace(/"/g, "'"); 
-  		let post_description = post_body.split(" ").splice(0,60).join(" ");  
-  		res.locals.description = post_description;
+  		let post_description = post_body.split(" ").splice(0,20).join(" ").replace(/\s+((?=\<)|(?=$))/g, ' ').replace(/(?:&nbsp;|<br>)/g,''); 
+  		res.locals.description = post_description.replace(/(<([^>]+)>)/gi, '').replace(/\s\s+/g, ' ');
   		let post_link = postAPI.data._id;res.locals.link='https://tipmeacoffee.com/post/'+post_link;
   		let post_img = postAPI.data.json.image;res.locals.image=post_img;
         let newUrl = tldts.parse(postAPI.data.json.url); let domain=newUrl.domain;
