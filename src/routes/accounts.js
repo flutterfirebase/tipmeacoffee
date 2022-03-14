@@ -21,7 +21,7 @@ async function logout(req, res) { try { res.clearCookie('breeze_username'); res.
 
 async function login(req, res) {
     try {
-        var user = req.body; var key = user.pivkey; var username = user.username;
+        var user = req.body; var key = user.pivkey; var loginUser=user.username.trim();var username=loginUser.toLowerCase();
         breej.getAccount(username, function (error, account) {
             if (account.error) { res.send({ error: true, message: 'Not a valid user' }); return false }
             try { pubKey = breej.privToPub(key) } catch (e) { res.send({ error: true, message: 'Password (privkey) seems incorrect' }); return }
@@ -36,15 +36,15 @@ async function login(req, res) {
 }
 async function signup(req, res) {
     try {
-        let post = req.body; let allowed_name = /^[0-9a-z]+$/; if (!post.name.match(allowed_name)) { res.send({ error: true, message: 'Only alphanumeric usernames allowed (all lowercase)' }); return false; };
-        if (post.name.length < 5) { res.send({ error: true, message: 'Username length should not be less than 5' }); return false; };
+        let post = req.body;let uName=post.name.toLowerCase();let inputName=uName.trim();let allowed_name = /^[0-9a-z]+$/; if (!inputName.match(allowed_name)) { res.send({ error: true, message: 'Only alphanumeric usernames allowed (all lowercase)' }); return false; };
+        if (inputName.length < 5) { res.send({ error: true, message: 'Username length should not be less than 5' }); return false; };
         if (!emailValidator.validate(post.email)) { res.send({ error: true, message: 'Not a valid email address' }); return false; };
-        breej.getAccounts([post.name], function (error, accounts) {
+        breej.getAccounts([inputName], function (error, accounts) {
             if (!accounts || accounts.length === 0) {
                 db.collection('users').findOne({ email: req.body.email }, function(err, user) {
                     if(user){res.send({ error: true, message: 'phew... Email is already in use' });
                     }else{ const crypto = require('crypto');const vtoken = crypto.randomBytes(16).toString('hex');
-                        let userData = {username: req.body.name,email: req.body.email,token: vtoken,isvarified: false,ref: req.body.ref, createdAt: new Date()}
+                        let userData = {username: inputName,email: req.body.email,token: vtoken,isvarified: false,ref: req.body.ref, createdAt: new Date()}
                         db.collection('users').insertOne(userData, function(err) {
                         if(err){res.send({ error: true, message: err });}else{
                             const token_url = "https://tipmeacoffee.com/verify/"+vtoken;
@@ -66,8 +66,8 @@ async function verify(req, res) {
             res.redirect('/profile/' + user);
         } else {
             db.collection('users').findOne({ token: vtoken }, function (err, result) {
-                if(result && result.isvarified==false){v_token='valid', username=result.username
-                }else if(result && result.isvarified==true){v_token='verified', username=result.username}else{v_token='invalid', username=''}
+                if(result && result.isvarified==false){v_token='valid', username=result.username.toLowerCase()
+                }else if(result && result.isvarified==true){v_token='verified', username=result.username.toLowerCase()}else{v_token='invalid', username=''}
                 loguser = ""; res.render('common/verify', { vtoken: v_token, user_id: username, trendingTags: nTags, loguser: loguser, category: category });
             })
         }
