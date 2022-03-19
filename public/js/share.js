@@ -38,7 +38,7 @@ $('.share_new_post').click(function(e) {
     let inputtags = $.trim($('.share_tags').val()).toLowerCase();var tags = inputtags.match(hashregex);
     if(!tags || tags.length<2){$('.share_tags').css("border-color", "red");toastr['error']("Add minimum 2 tags with hash sign");return  false;}var metatags = (tags.map(s => s.slice(1))).join(' ');
     let title = $('.data-title').html();let description = $('textarea#post_desc').val();
-    let post_body = description.replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"');
+    let psotBody = description.replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"');let post_body=$.trim(psotBody.replace(/\s|&nbsp;/g, "").split('<p></p>').join(''));
     let urlImage =  $('.post_img img').attr('src'); let category = ($( "#share_cat option:selected" ).text()).toLowerCase();
     $(".share_new_post").attr("disabled", true);$('.edit_post_txt').html('Sharing...');
     $.ajax({type: "POST",url: "/postlinks",data: {title: title,tags:metatags,description:post_body,category: category,image:urlImage,exturl:urlInput,type:urlType},
