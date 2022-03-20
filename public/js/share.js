@@ -4,7 +4,7 @@ var hashregex = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,30})(\b|\r)/g;
 $('.add_post').click(function() {
   if (breeze_username) {let formData = new FormData();
     $('.add_post_txt').html('Posting...');$(".add_post").attr("disabled", true);
-    var content=tinymce.activeEditor.getContent();
+    var psotBody=tinymce.activeEditor.getContent();let content=$.trim(psotBody.replace(/\s|&nbsp;/g, "").split('<p></p>').join(''));
     if(($.trim(content).length) < 60){toastr['error']("Minimum text 60 characters!");$('.add_post_txt').html('Post');$(".add_post").attr("disabled", false);return false}
     var hashregex= /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,30})(\b|\r)/g;var tags=content.match(hashregex);
     if(!tags || tags.length<2){toastr['error']("Add atleast 2 tags");$('.add_post_txt').html('Post');$(".add_post").attr("disabled", false); return false}
