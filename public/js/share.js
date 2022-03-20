@@ -4,7 +4,7 @@ var hashregex = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,30})(\b|\r)/g;
 $('.add_post').click(function() {
   if (breeze_username) {let formData = new FormData();
     $('.add_post_txt').html('Posting...');$(".add_post").attr("disabled", true);
-    var psotBody=tinymce.activeEditor.getContent();let content=$.trim(psotBody.replace(/\s|&nbsp;/g, "").split('<p></p>').join(''));
+    var psotBody=tinymce.activeEditor.getContent();let content=$.trim(psotBody.split('<p></p>').join(''));
     if(($.trim(content).length) < 60){toastr['error']("Minimum text 60 characters!");$('.add_post_txt').html('Post');$(".add_post").attr("disabled", false);return false}
     var hashregex= /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,30})(\b|\r)/g;var tags=content.match(hashregex);
     if(!tags || tags.length<2){toastr['error']("Add atleast 2 tags");$('.add_post_txt').html('Post');$(".add_post").attr("disabled", false); return false}
@@ -38,7 +38,7 @@ $('.share_new_post').click(function(e) {
     let inputtags = $.trim($('.share_tags').val()).toLowerCase();var tags = inputtags.match(hashregex);
     if(!tags || tags.length<2){$('.share_tags').css("border-color", "red");toastr['error']("Add minimum 2 tags with hash sign");return  false;}var metatags = (tags.map(s => s.slice(1))).join(' ');
     let title = $('.data-title').html();let description = $('textarea#post_desc').val();
-    let psotBody = description.replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"');let post_body=$.trim(psotBody.replace(/\s|&nbsp;/g, "").split('<p></p>').join(''));
+    let psotBody = description.replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"');let post_body=$.trim(psotBody.split('<p></p>').join(''));
     let urlImage =  $('.post_img img').attr('src'); let category = ($( "#share_cat option:selected" ).text()).toLowerCase();
     $(".share_new_post").attr("disabled", true);$('.edit_post_txt').html('Sharing...');
     $.ajax({type: "POST",url: "/postlinks",data: {title: title,tags:metatags,description:post_body,category: category,image:urlImage,exturl:urlInput,type:urlType},
