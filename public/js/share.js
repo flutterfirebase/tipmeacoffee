@@ -4,14 +4,14 @@ var hashregex = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,30})(\b|\r)/g;
 $('.add_post').click(function() {
   if (breeze_username) {let formData = new FormData();
     $('.add_post_txt').html('Posting...');$(".add_post").attr("disabled", true);
-    var psotBody=tinymce.activeEditor.getContent();let content=$.trim(psotBody.split('<p></p>').join(''));
+    var content=tinymce.activeEditor.getContent();
     if(($.trim(content).length) < 60){toastr['error']("Minimum text 60 characters!");$('.add_post_txt').html('Post');$(".add_post").attr("disabled", false);return false}
     var hashregex= /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,30})(\b|\r)/g;var tags=content.match(hashregex);
     if(!tags || tags.length<2){toastr['error']("Add atleast 2 tags");$('.add_post_txt').html('Post');$(".add_post").attr("disabled", false); return false}
     if(tags){var metatags = (tags.map(s => s.slice(1))).join(' ');metatags=metatags.toLowerCase();formData.append('tags', metatags);};formData.append('description', content);
     if($("#fileInput")[0].files.length > 0){formData.append("type", '2');var filename =$('#filename').val();formData.append("file", $('#fileInput')[0].files[0]);formData.append('filename', filename);
     }else{formData.append("type", '3');} 
-    $.ajax({url: '/postlinks',type: 'POST',contentType: false,processData: false,data: formData,
+    $.ajax({url: '/postlinkssss',type: 'POST',contentType: false,processData: false,data: formData,
       success: function(data)  {
         if (data.error == false) {$('.add_post_txt').html('Posting...');$(".add_post").attr("disabled", true);toastr['success']("Published Successfully!");setTimeout(function(){window.location.href = '/post/'+breeze_username+'/'+data.link;}, 200); 
         } else {toastr['error'](data.message);$('.add_post_txt').html('Post');$(".add_post").attr("disabled", false);return false;
@@ -71,5 +71,6 @@ tinymce.init({
   quickbars_insert_toolbar: false,
   placeholder: "What's Up...",
   theme_advanced_toolbar_align : "right",
-  paste_as_text: true
+  paste_as_text: true,
+  forced_root_blocks : false
 });
