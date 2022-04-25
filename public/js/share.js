@@ -11,7 +11,7 @@ $('.add_post').click(function() {
     if(tags){var metatags = (tags.map(s => s.slice(1))).join(' ');metatags=metatags.toLowerCase();formData.append('tags', metatags);};formData.append('description', content);
     if($("#fileInput")[0].files.length > 0){formData.append("type", '2');var filename =$('#filename').val();formData.append("file", $('#fileInput')[0].files[0]);formData.append('filename', filename);
     }else{formData.append("type", '3');} 
-    $.ajax({url: '/postlinkssss',type: 'POST',contentType: false,processData: false,data: formData,
+    $.ajax({url: '/postlinks',type: 'POST',contentType: false,processData: false,data: formData,
       success: function(data)  {
         if (data.error == false) {$('.add_post_txt').html('Posting...');$(".add_post").attr("disabled", true);toastr['success']("Published Successfully!");setTimeout(function(){window.location.href = '/post/'+breeze_username+'/'+data.link;}, 200); 
         } else {toastr['error'](data.message);$('.add_post_txt').html('Post');$(".add_post").attr("disabled", false);return false;
