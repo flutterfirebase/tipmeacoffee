@@ -353,7 +353,9 @@ router.post('/withdraw', async (req, res) => {
         //let bnewTx = { type: 3, data: { receiver: 'null', amount: bAmount, memo: '' } };
         let signedTx = breej.sign(wifKey, sender, newTx);
         //let bsignedTx = breej.sign(wifKey, sender, bnewTx);
-        breej.sendTransaction(signedTx, (error, result) => { if (error === null) { breej.sendTransaction(bsignedTx, (error, result) => { });res.send({ error: false }); } else { res.send({ error: true, message: error['error'] }); } })
+        breej.sendTransaction(signedTx, (error, result) => { if (error === null) { 
+          //breej.sendTransaction(bsignedTx, (error, result) => { });
+          res.send({ error: false }); } else { res.send({ error: true, message: error['error'] }); } })
       }
     });
   } else { res.send({ error: true, message: 'phew.. User Validation Fails' }); }
