@@ -346,10 +346,13 @@ router.post('/withdraw', async (req, res) => {
       } else if (!valid) {
             res.send({ error: true, message: 'Not a valid BSC wallet address' });
       } else {
-        let wAmount = parseInt((amount) * 0.99);let bAmount = parseInt((amount) * 0.01);
+        let wAmount = parseInt(amount);
+        //let wAmount = parseInt((amount) * 0.99);
+        //let bAmount = parseInt((amount) * 0.01);
         let newTx = { type: 23, data: { destaddr: post.wid_addr, network: 'BSC', amount: wAmount } };
-        let bnewTx = { type: 3, data: { receiver: 'null', amount: bAmount, memo: '' } };
-        let signedTx = breej.sign(wifKey, sender, newTx);let bsignedTx = breej.sign(wifKey, sender, bnewTx);
+        //let bnewTx = { type: 3, data: { receiver: 'null', amount: bAmount, memo: '' } };
+        let signedTx = breej.sign(wifKey, sender, newTx);
+        //let bsignedTx = breej.sign(wifKey, sender, bnewTx);
         breej.sendTransaction(signedTx, (error, result) => { if (error === null) { breej.sendTransaction(bsignedTx, (error, result) => { });res.send({ error: false }); } else { res.send({ error: true, message: error['error'] }); } })
       }
     });
