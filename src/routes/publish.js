@@ -25,17 +25,18 @@ async function share(req, res) {
   try {
     if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { let post = req.body; 
       if (!isUrl(post.url)) {res.send({ error: true, message: 'Not a valid URL' });
-      } else { let newUrl = tldts.parse(post.url); let domainName=newUrl.domain;
+      } else {let newUrl = tldts.parse(post.url); let domainName=newUrl.domain;
         if(helper.sites.includes(domainName)){res.send({ error: true, message: 'unable to share form this url' });return false;
         } else { const urlType = videoParser.parse(post.url); if(!(urlType)){type='0'}else{type='1'}
-          Meta.parser(post.url, function (err, result) {
+          //Meta.parser(post.url, function (err, result) { //});
             try{
+              var result = await Meta.parser(post.url);
               if(result){let meta = result['og']; 
                 if(!meta.title){res.send({ error: true, message: 'Phew.. Unable to fetch shared link' });
                 } else {res.send({ error: false, meta: meta, link: domainName, type: type });}
               } else {res.send({ error: true, message: 'Unable to Parse URL' });}
             } catch (err) { console.log(err); res.send({ error: true, message: err }) }
-          }) 
+           
         }
       }
     } else { res.send({ error: true, message: 'phew.. User Validation Fails' }); }   
