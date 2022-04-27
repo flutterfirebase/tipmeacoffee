@@ -39,7 +39,8 @@ $('.share_new_post').click(function(e) {
     if(!tags || tags.length<2){$('.share_tags').css("border-color", "red");toastr['error']("Add minimum 2 tags with hash sign");return  false;}var metatags = (tags.map(s => s.slice(1))).join(' ');
     let title = $('.data-title').html();let description = $('textarea#post_desc').val();
     let psotBody = description.replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"');let post_body=$.trim(psotBody.split('<p></p>').join(''));
-    let urlImage =  $('.post_img img').attr('src'); let category = ($( "#share_cat option:selected" ).text()).toLowerCase();
+    let urlImage =  $('.post_img img').attr('src'); 
+    let category = ($( "#share_cat option" ).val()).toLowerCase();
     $(".share_new_post").attr("disabled", true);$('.edit_post_txt').html('Sharing...');
     $.ajax({type: "POST",url: "/postlinks",data: {title: title,tags:metatags,description:post_body,category: category,image:urlImage,exturl:urlInput,type:urlType},
         success: function(data) {if (data.error == false) {toastr['success']("Link Shared Successfully!");setTimeout(function(){window.location.href = '/post/'+breeze_username+'/'+data.link;}, 200); } else {toastr['error'](data.message);$(".share_new_post").attr("disabled", false);$('.edit_post_txt').html('Publish');return false} }
