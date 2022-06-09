@@ -20,9 +20,7 @@ const getAccountPub = (username) => { return new Promise((res, rej) => { breej.g
 const validateToken = async(username, token) => {if(!username || !token) return false; try { var decrypted = CryptoJS.AES.decrypt(token, msgkey, { iv: iv }); return breej.privToPub(decrypted.toString(CryptoJS.enc.Utf8)) === await getAccountPub(username); }catch(err){return false;} }
 const nkey = async(token) => {try{let decrypted = CryptoJS.AES.decrypt(token, msgkey, { iv: iv }); let uKey = decrypted.toString(CryptoJS.enc.Utf8);return uKey;}catch(err){return false;} }
 const msgkey = process.env.msgKey; const iv = process.env.breezval;
-
 var spammers = fs.readFileSync('./src/views/common/spammers.txt').toString().split("\r\n");
-console.log(spammers)
 
 async function share(req, res) {
   try {
