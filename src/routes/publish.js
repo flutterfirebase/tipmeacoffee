@@ -21,9 +21,13 @@ const validateToken = async(username, token) => {if(!username || !token) return 
 const nkey = async(token) => {try{let decrypted = CryptoJS.AES.decrypt(token, msgkey, { iv: iv }); let uKey = decrypted.toString(CryptoJS.enc.Utf8);return uKey;}catch(err){return false;} }
 const msgkey = process.env.msgKey; const iv = process.env.breezval;
 
+var spammers = fs.readFileSync('./src/views/common/spammers.txt').toString().split("\r\n");
+console.log(spammers)
+
 async function share(req, res) {
   try {
-    if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { let post = req.body; 
+    if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { let post = req.body;
+      if(spammers.includes(req.cookies.breeze_username)){res.send({ error: true, message: 'You are not allowed to post due to spamming!' });return false;} 
       if (!isUrl(post.url)) {res.send({ error: true, message: 'Not a valid URL' });
       } else {let newUrl = tldts.parse(post.url); let domainName=newUrl.domain;
         if(helper.sites.includes(domainName)){res.send({ error: true, message: 'unable to share form this url' });return false;
@@ -52,6 +56,7 @@ const addFile = async (fileName, filePath) => {
 async function post(req, res) {
   try {
     if (await validateToken(req.cookies.breeze_username, req.cookies.token)) {
+      if(spammers.includes(req.cookies.breeze_username)){res.send({ error: true, message: 'You are not allowed to post due to spamming!' });return false;}
       let token = req.cookies.token;let wifKey = await nkey(req.cookies.token);let author = req.cookies.breeze_username;let post = req.body;
       let allowed_tags=/^[a-z\d\_\s]+$/i;
       if (!allowed_tags.test(post.tags)) {res.send({ error: true, message: 'Only alphanumeric tags, no Characters.' });return false}

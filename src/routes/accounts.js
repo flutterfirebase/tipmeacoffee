@@ -6,7 +6,8 @@ const assert = require('assert');
 const nodemailer = require("nodemailer");
 const breej = require('breej')
 const CryptoJS = require("crypto-js");
-const db_url = process.env.MONGOLAB_URI;
+
+const db_url = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/tipmeacoffee';
 const dbName = 'besocial'; var db;
 const helper = require('./helper');
 const fetchTags = helper.getTags
