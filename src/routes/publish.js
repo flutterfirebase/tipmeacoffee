@@ -21,7 +21,7 @@ const validateToken = async(username, token) => {if(!username || !token) return 
 const nkey = async(token) => {try{let decrypted = CryptoJS.AES.decrypt(token, msgkey, { iv: iv }); let uKey = decrypted.toString(CryptoJS.enc.Utf8);return uKey;}catch(err){return false;} }
 const msgkey = process.env.msgKey; const iv = process.env.breezval;
 var spammers = fs.readFileSync('./src/views/common/spammers.txt').toString().split("\n");
-console.log(spammers);
+
 async function share(req, res) {
   try {
     if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { let post = req.body;
