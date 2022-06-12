@@ -3,11 +3,16 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const fileUpload = require('express-fileupload')
 
+const requestIp = require('request-ip');
+
+
 const main = require('./src/routes/main');
 const post = require('./src/routes/post');
 const accountRouter = require('./src/routes/accounts')
 const publish = require('./src/routes/publish')
 const app = express();
+
+app.use(requestIp.mw())
 
 app.use(express.static('public'))
 app.use('/css', express.static(__dirname + 'public/css'))

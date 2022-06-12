@@ -24,6 +24,7 @@ const nkey = async(token) => {try{let decrypted = CryptoJS.AES.decrypt(token, ms
 var spammers = fs.readFileSync('./src/views/common/spammers.txt').toString().split("\n");
 
 router.get('', async (req, res) => { res.locals.title='Tip Me A Coffee - Social Media on Blockchain'; res.locals.description='TipMeACoffee - A social media platform built on blockchain where you share to earn TMAC tokens. Share what you like - Earn if community likes it.';
+  console.log(req.clientIp)
   let index = req.query.index | 0; let postsAPI = await axios.get(api_url+`/new/${index}`); let nTags = await fetchTags(); let promotedAPI = await axios.get(api_url+`/promoted`); let promotedData = []; let finalData = postsAPI.data; 
   if (promotedAPI.data.length > 0) promotedData = promotedAPI.data.slice(0, 3).map(x => ({ ...x, __promoted: true }));
   if (promotedData.length > 0) finalData.splice(1, 0, promotedData[0]); 
