@@ -347,8 +347,8 @@ router.post('/withdraw', async (req, res) => {
         res.send({ error: true, message: 'Unable to validate user' });
       } else if (amount > account.balance) {
             res.send({ error: true, message: 'Not enough balance' });
-      } else if (amount <  1000000) {
-            res.send({ error: true, message: 'Min withdrawal amount is 1 token' }); 
+      } else if (amount <  2000000) {
+            res.send({ error: true, message: 'Min withdrawal amount is 2 tokens' }); 
       } else if (!valid) {
             res.send({ error: true, message: 'Not a valid BSC wallet address' });
       } else {
