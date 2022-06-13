@@ -72,7 +72,7 @@ tinymce.init({
   quickbars_insert_toolbar: false,
   placeholder: "What's Up...",
   theme_advanced_toolbar_align : "right",
-  paste_as_text: false,
+  paste_as_text: true,
   forced_root_blocks : false,
   directionality: 'ltr'
 });
