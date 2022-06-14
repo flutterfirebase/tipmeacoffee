@@ -40,7 +40,6 @@
     "random-string": "^0.2.0",
     "randomstring": "^1.2.2",
     "request-ip": "^2.2.0",
-    "set-value": ">=4.0.1",
     "slugify": "^1.6.5",
     "speakingurl": "^14.0.1",
     "stringz": "^2.1.0",
@@ -51,9 +50,9 @@
     "wallet-validator": "^0.3.10"
   },
   "devDependencies": {
-    "lodash": ">=4.17.21",
     "glob-parent": ">=5.1.2",
-    "set-value": ">=4.0.1",
+    "lodash": ">=4.17.21",
+    "set-value": "^4.0.1",
     "yargs-parser": "^21.0.1"
   }
 }
