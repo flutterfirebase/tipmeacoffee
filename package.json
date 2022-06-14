@@ -52,6 +52,7 @@
   },
   "devDependencies": {
     "lodash": ">=4.17.21",
+    "glob-parent": ">=5.1.2",
     "set-value": ">=4.0.1",
     "yargs-parser": "^21.0.1"
   }
