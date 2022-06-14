@@ -45,7 +45,7 @@
     "stringz": "^2.1.0",
     "tlds": "^1.231.0",
     "tldts": "^5.7.81",
-    "update": "^0.4.2",
+    "update": "^0.7.4",
     "upgrade": "^1.1.0",
     "wallet-validator": "^0.3.12"
   },
