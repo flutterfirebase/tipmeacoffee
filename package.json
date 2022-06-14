@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "lodash": ">=4.17.21",
-    "set-value": "^4.0.0",
+    "set-value": "^4.1.0",
     "yargs-parser": "^21.0.1"
   }
 }
