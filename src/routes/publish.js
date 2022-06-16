@@ -61,6 +61,7 @@ async function post(req, res) {
       if (!allowed_tags.test(post.tags)) {res.send({ error: true, message: 'Only alphanumeric tags, no Characters.' });return false}
       let tags=post.tags.replace(/\s\s+/g, ' ');let tags_arr=tags.trim().split(' ');
       if (post.description.length < 60) {res.send({ error: true, message: 'Add description of minimum 60 characters' });return false}
+      if (post.description.length > 300) {res.send({ error: true, message: 'Content must be less than 300 characters' });return false}
       let description=post.description;
       
       let status_link=randomstring.generate({ length: 13, capitalization: 'lowercase', readable: true, charset: 'numeric'});
