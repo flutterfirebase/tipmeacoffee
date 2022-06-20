@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser')
 const fileUpload = require('express-fileupload')
 
 const requestIp = require('request-ip');
-
+const RateLimit = require('express-rate-limit');
 
 const main = require('./src/routes/main');
 const post = require('./src/routes/post');
@@ -12,7 +12,9 @@ const accountRouter = require('./src/routes/accounts')
 const publish = require('./src/routes/publish')
 const app = express();
 
-app.use(requestIp.mw())
+app.use(requestIp.mw());
+var limiter = RateLimit({windowMs: 1*60*1000,max: 8,message:'Too many requests'});
+app.use(limiter);
 
 app.use(express.static('public'))
 app.use('/css', express.static(__dirname + 'public/css'))
