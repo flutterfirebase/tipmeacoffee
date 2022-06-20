@@ -78,7 +78,7 @@ async function post(req, res) {
           }
         })
       }else if(req.body.type == '2') {
-        const file = req.files.file;const fileName = req.body.filename;const filePath = path.resolve('files/'+fileName);
+        const file = req.files.file;const fileName = escape(trim(req.body.filename));const filePath = path.resolve('files/'+fileName);
         file.mv(filePath, async (err) => {
           if (err) {return res.send({error: true, message: 'IPFS issues for image uploading'});}
           const fileHash = await addFile(fileName, filePath)
