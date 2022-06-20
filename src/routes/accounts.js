@@ -37,7 +37,7 @@ async function login(req, res) {
 }
 async function signup(req, res) {
     try {
-        let post = req.body;let uEmail=req.body.email;let uName=post.name.toLowerCase();let inputName=uName.trim();let allowed_name = /^[0-9a-z]+$/; if (!inputName.match(allowed_name)) { res.send({ error: true, message: 'Only alphanumeric usernames allowed (all lowercase)' }); return false; };
+        let post = req.body;let uEmail=escape(req.body.email);let uName=post.name.toLowerCase();let inputName=uName.trim();let allowed_name = /^[0-9a-z]+$/; if (!inputName.match(allowed_name)) { res.send({ error: true, message: 'Only alphanumeric usernames allowed (all lowercase)' }); return false; };
         if (inputName.length < 5) { res.send({ error: true, message: 'Username length should not be less than 5' }); return false; };
         if (!emailValidator.validate(post.email)) { res.send({ error: true, message: 'Not a valid email address' }); return false; };
         breej.getAccounts([inputName], function (error, accounts) {
@@ -62,7 +62,7 @@ async function signup(req, res) {
 
 async function verify(req, res) {
     try {
-        let vtoken = req.params.token;let token = req.cookies.token; let user = req.cookies.breeze_username; let nTags = await fetchTags();
+        let vtoken = escape(req.params.token);let token = req.cookies.token; let user = req.cookies.breeze_username; let nTags = await fetchTags();
         if (token && await validateToken(req.cookies.breeze_username, req.cookies.token)) {
             res.redirect('/profile/' + user);
         } else {
@@ -80,7 +80,7 @@ async function keygen(req, res) {
         let post = req.body; let allowed_name = /^[0-9a-z]+$/; if (!post.name.match(allowed_name)) { res.send({ error: true, message: 'Only alphanumeric usernames allowed (all lowercase)' }); return false; };
         if (post.name.length < 5) { res.send({ error: true, message: 'Username length should not be less than 5' }); return false; };
         breej.getAccounts([post.name], function (error, accounts) {
-            if (!accounts || accounts.length === 0) {let ref='';let Uname=req.body.name;
+            if (!accounts || accounts.length === 0) {let ref='';let Uname=escape(req.body.name);
                 db.collection('users').updateOne({ username: Uname}, {$set: { isvarified: true}})
                 db.collection('users').findOne({ username: Uname }, function (err, result) {if(result){
                     ref=result.ref;let keys = breej.keypair(); let pub = keys.pub; let priv = keys.priv;
