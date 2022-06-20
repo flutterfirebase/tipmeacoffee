@@ -3966,14 +3966,17 @@ img:-moz-broken {
 /* sidebar fixing css start  */
 
 .tg {
-	background: #f5f8fa;
+	/*background: rgba(29, 161, 242, .07);
+	background: rgba(0, 0, 0, .07);*/
+	background-color: 	#f0f2f5;
 	font-size: 15px;
-	padding: 6px 15px;
-	line-height: 1;
-	border-radius: 20px;
+	padding: 6px 20px;
+	border-radius: 10px;
 	display: inline-block;
-	margin: 4px;
-	color: #14171a;
+	margin: 6px 4px;
+	color: rgb(41, 41, 41);
+	font-weight: 500;
+	border: 1px solid #c1cad033;
 }
 
 .tg:hover {
@@ -3983,7 +3986,7 @@ img:-moz-broken {
 .trending-flx-wrap {
 	display: flex;
 	flex-wrap: wrap;
-	padding: 12px 0;
+	padding: 30px 0;
 	margin-left: -4px;
 }
 
@@ -3994,13 +3997,13 @@ img:-moz-broken {
 
 .side-search {
 	position: relative;
-	margin-bottom: 20px;
+	margin-bottom: 25px;
 }
 
 .side-search input {
 	width: 100%;
 	border: 1px solid #e6ecf0;
-	height: 40px;
+	height: 45px;
 	border-radius: 30px;
 	padding-left: 40px;
 	padding-right: 15px;
@@ -4026,7 +4029,7 @@ img:-moz-broken {
 }
 
 .access-btn {
-	background: rgb(25, 25, 25);
+	background: rgb(29, 161, 242);
 	width: 100%;
 	display: block;
 	border-radius: 30px;
@@ -4046,7 +4049,7 @@ img:-moz-broken {
 }
 
 .divider {
-	padding: 30px 0;
+	padding: 20px 0;
 }
 
 /* sidebar fixing css end */
