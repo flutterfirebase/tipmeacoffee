@@ -6,7 +6,7 @@
                 <div class="Home-wrapper">
                     <%- include('./common/topnav') %>
                     <div class="inner-wrapper">
-                        <div class="post-header-wrapper back_sec"><div class="back_btn"><span class="middle-header-content">#<%- calledTag %></span></div></div>
+                        <div class="post-header-wrapper back_sec"><div class="back_btn"><span class="middle-header-content">#<%= calledTag %></span></div></div>
                         <%  articles.forEach(function(article) { 
                             var tags = article.json.tags; var metatags = tags.map(s => '<a href="/tags/'+s+'">#'+s+'</a>').join(' ');var catg = article.json.category; var category = catg.charAt(0).toUpperCase() + catg.slice(1);var upvotes=JSON.stringify(article.votes); if(article.likes>0){postIncome=((article.dist)/1000000).toString()}else{postIncome=0}%>
                         <div>

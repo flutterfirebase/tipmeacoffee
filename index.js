@@ -14,7 +14,7 @@ const publish = require('./src/routes/publish')
 const app = express();
 
 app.use(requestIp.mw());
-var limiter = RateLimit({windowMs: 1*60*1000,max: 8,message:'Too many requests'});
+var limiter = RateLimit({windowMs: 1*60*1000,max: 18,message:'Too many requests'});
 app.use(limiter);
 app.use(mongoSanitize());
 
