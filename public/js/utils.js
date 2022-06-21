@@ -63,9 +63,9 @@ $('.keygen_btn').click(function() {let username = $('.user_name').html();$('.key
 $('.copy_pass').click(function() {var copyText = document.getElementById("acct_priv_key");copyText.select();copyText.setSelectionRange(0, 99999); /* For mobile devices */
     document.execCommand("copy");$('.copy_pass').html('Copied!');toastr['success']("Key copied to clipboard.");return false;
 })
-function isValidURL(url) {var RegExp = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/; if (RegExp.test(url)) {return true;} else {toastr.error('phew... Enter a valid url');return false;} }
-function getDomain(url) {let hostName = getHostName(url);let domain = hostName;if (hostName != null) {let parts = hostName.split('.').reverse();if (parts != null && parts.length > 1) {domain = parts[1] + '.' + parts[0];if (hostName.toLowerCase().indexOf('.co.uk') != -1 && parts.length > 2) { domain = parts[2] + '.' + domain;}}}else{return false;} return domain;}
-function getHostName(url) {var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i); if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {return match[2];} else {toastr.error('phew... Enter a valid url');return false;}}
+//function isValidURL(url) {var RegExp = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/; if (RegExp.test(url)) {return true;} else {toastr.error('phew... Enter a valid url');return false;} }
+//function getDomain(url) {let hostName = getHostName(url);let domain = hostName;if (hostName != null) {let parts = hostName.split('.').reverse();if (parts != null && parts.length > 1) {domain = parts[1] + '.' + parts[0];if (hostName.toLowerCase().indexOf('.co.uk') != -1 && parts.length > 2) { domain = parts[2] + '.' + domain;}}}else{return false;} return domain;}
+//function getHostName(url) {var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i); if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {return match[2];} else {toastr.error('phew... Enter a valid url');return false;}}
 $('.Home-wrapper, .profile-wrapper').on("click", ".card-icon", function() {
     if (breeze_username) {var $this = $(this);var postLink = $this.attr("data-permlink");var postAuthor = $this.attr("data-author");$this.addClass('hov_ani');
         $.ajax({ type: "POST",url: "/upvote", data: {author: postAuthor, postLink: postLink}, success: function(data) {
@@ -173,4 +173,4 @@ $(window).scroll(function() {
         });
     }
  });
-$('.post-content').on("click", function() {var postLink = $(this).attr("data-permlink");var postAuthor = $(this).attr("data-author"); window.location.href = '/post/'+postAuthor+'/'+postLink })
+$('.post-content').on("click", function() {var postLink = $(this).attr("data-permlink");var postAuthor = $(this).attr("data-author"); let ilink= '/post/'+postAuthor+'/'+postLink; window.location.href = ilink; })
