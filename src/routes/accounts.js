@@ -28,7 +28,7 @@ async function login(req, res) {
             try { pubKey = breej.privToPub(key) } catch (e) { res.send({ error: true, message: 'Password (privkey) seems incorrect' }); return }
             if (account.pub !== pubKey) { res.send({ error: true, message: 'Password (privkey) validation fails' }); } else {
                 var encrypted = CryptoJS.AES.encrypt(key, msgkey, { iv: iv }); var token = encrypted.toString();
-                res.cookie('breeze_username', username, { expires: new Date(Date.now() + 86400000000), httpOnly: false });
+                res.cookie('breeze_username', username, { expires: new Date(Date.now() + 86400000000), httpOnly: true });
                 res.cookie('token', token, { expires: new Date(Date.now() + 86400000000), httpOnly: true });
                 res.send({ error: false });
             }

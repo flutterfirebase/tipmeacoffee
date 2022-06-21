@@ -152,27 +152,31 @@ router.post('/upvote', async (req, res) => {
 });
 
 router.post('/witup', async (req, res) => {
-  let post = req.body;let voter = req.cookies.breeze_username;let wifKey = await nkey(req.cookies.token);
-  let newTx = { type: 1, data: { target: post.nodeName } }; 
-  breej.getAccount(voter, function (error, account) {
-    if (breej.privToPub(wifKey) !== account.pub) { res.send({ error: true, message: 'Not a valid user' }) } else {
-      newTx = breej.sign(wifKey, voter, newTx)
-      breej.sendTransaction(newTx, function (err, response) { if (err === null) { res.send({ error: false }); } else { res.send({ error: true, message: err['error'] }); } })
-    }
-  })
+  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) {
+    let post = req.body;let voter = req.cookies.breeze_username;let wifKey = await nkey(req.cookies.token);
+    let newTx = { type: 1, data: { target: post.nodeName } }; 
+    breej.getAccount(voter, function (error, account) {
+      if (breej.privToPub(wifKey) !== account.pub) { res.send({ error: true, message: 'Not a valid user' }) } else {
+        newTx = breej.sign(wifKey, voter, newTx)
+        breej.sendTransaction(newTx, function (err, response) { if (err === null) { res.send({ error: false }); } else { res.send({ error: true, message: err['error'] }); } })
+      }
+    })
+  } else { res.send({ error: true, message: 'phew.. User Validation Fails' }); } 
 });
 
 router.post('/witunup', async (req, res) => {
-  let post = req.body;let voter = req.cookies.breeze_username;
-  let newTx = { type: 2, data: { target: post.nodeName } };let wifKey = await nkey(req.cookies.token);
-  breej.getAccount(voter, function (error, account) {
-    if (breej.privToPub(wifKey) !== account.pub) {  res.send({ error: true, message: 'Not a valid user' }) } else {
-      newTx = breej.sign(wifKey, voter, newTx)
-      breej.sendTransaction(newTx, function (err, response) {
-        if (err === null) { res.send({ error: false }); } else { res.send({ error: true, message: err['error'] }); }
-      })
-    }
-  })
+  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) {
+    let post = req.body;let voter = req.cookies.breeze_username;
+    let newTx = { type: 2, data: { target: post.nodeName } };let wifKey = await nkey(req.cookies.token);
+    breej.getAccount(voter, function (error, account) {
+      if (breej.privToPub(wifKey) !== account.pub) {  res.send({ error: true, message: 'Not a valid user' }) } else {
+        newTx = breej.sign(wifKey, voter, newTx)
+        breej.sendTransaction(newTx, function (err, response) {
+          if (err === null) { res.send({ error: false }); } else { res.send({ error: true, message: err['error'] }); }
+        })
+      }
+    })
+  } else { res.send({ error: true, message: 'phew.. User Validation Fails' }); } 
 });
 
 router.post('/notify', async (req, res) => {
