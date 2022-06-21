@@ -16,7 +16,7 @@ const getAccountPub = (username) => { return new Promise((res, rej) => { breej.g
 const validateToken = async(username, token) => {if(!username || !token) return false; try { var decrypted = CryptoJS.AES.decrypt(token, msgkey, { iv: iv }); return breej.privToPub(decrypted.toString(CryptoJS.enc.Utf8)) === await getAccountPub(username); }catch(err){return false;} }
 
 const msgkey = process.env.msgKey; const iv = process.env.breezval;
-//MongoClient.connect(db_url, function(err, client) { assert.equal(null, err);console.log("Connected successfully to server"); db = client.db(dbName); });
+MongoClient.connect(db_url, function(err, client) { assert.equal(null, err);console.log("Connected successfully to server"); db = client.db(dbName); });
 
 async function logout(req, res) { try { res.clearCookie('breeze_username'); res.clearCookie('token'); res.send({ error: false }); } catch (error) { res.send({ error: true, message: error['error'] }) } }
 

@@ -6,7 +6,7 @@ const mcache = require('memory-cache');
 const api = 'https://api.breezescan.io'; breej.init({ api: 'https://api.breezescan.io', bwGrowth: 36000000000, vpGrowth: 120000000000 })
 const categories = ['News','Cryptocurrency','Food','Sports','Technology','LifeStyle','Health','Gaming','Business','General'];
 
-const getTags = async (maxTags) => { if(!maxTags) maxTags = 15; let timeNow = new Date().getTime(); let postsTime = timeNow - 14400000; let tagsAPI = await axios.get(api+`/trending?after=${postsTime}&limit=100`); let posts = tagsAPI.data; let tags = {};
+const getTags = async (maxTags) => { if(!maxTags) maxTags = 16; let timeNow = new Date().getTime(); let postsTime = timeNow - 14400000; let tagsAPI = await axios.get(api+`/trending?after=${postsTime}&limit=100`); let posts = tagsAPI.data; let tags = {};
   for (let p in posts) if (posts[p].json && posts[p].json.tags) { let postTags = posts[p].json.tags;for (let t in postTags) if (!tags[postTags[t]]) { tags[postTags[t]] = 1 } else { tags[postTags[t]] += 1 }}; let tagArr = [];
   for (let t in tags) tagArr.push({ m: t, v: tags[t] }); tagsArr = tagArr.sort((a, b) => b.v - a.v); tagsArr = tagsArr.slice(0, maxTags); return tagsArr
 }
