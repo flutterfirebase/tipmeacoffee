@@ -69,7 +69,7 @@ function getHostName(url) {var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i
 $('.Home-wrapper, .profile-wrapper').on("click", ".card-icon", function() {
     if (breeze_username) {var $this = $(this);var postLink = $this.attr("data-permlink");var postAuthor = $this.attr("data-author");$this.addClass('hov_ani');
         $.ajax({ type: "POST",url: "/upvote", data: {author: postAuthor, postLink: postLink}, success: function(data) {
-            if (data.error == false) { console.log(data.income)
+            if (data.error == false) {
                 $this.removeClass('hov_ani');$this.addClass('hov_done');
                 $this.parent().find('.card-icon-value').css("color", "#e0245e").html(data.likes);
                 if(data.income>0){postIncome=((data.income)/1000000).toString()}else{postIncome=0}
