@@ -3394,6 +3394,7 @@ body.dark_mode .key_section h4,
 body.dark_mode .key_section_description {
 	color: rgb(217, 217, 217);
 }
+body.dark_mode .post-content a{color: rgb(29, 155, 240) !important;}
 
 body.dark_mode .Home-header-wrapper {
 	border-color: #273d4b;

@@ -24,8 +24,8 @@ var spammers = fs.readFileSync('./src/views/common/spammers.txt').toString().spl
 
 async function share(req, res) {
   try {
-    if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { let post = req.body;
-      if(spammers.includes(req.cookies.breeze_username)){res.send({ error: true, message: 'You are not allowed to post due to spamming!' });return false;} 
+    if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { let post = req.body;let uname=req.cookies.breeze_username.trim();
+      if(spammers.includes(uname)){res.send({ error: true, message: 'You are not allowed to post due to spamming!' });return false;} 
       if (!isUrl(post.url)) {res.send({ error: true, message: 'Not a valid URL' });
       } else {let newUrl = tldts.parse(post.url); let domainName=newUrl.domain;
         if(helper.sites.includes(domainName)){res.send({ error: true, message: 'unable to share form this url' });return false;
@@ -74,11 +74,11 @@ async function post(req, res) {
         breej.getAccount(author, function (error, account) {
           if (breej.privToPub(wifKey) !== account.pub) {res.send({ error: true, message: 'Unable to validate user' });
           } else { newTx = breej.sign(wifKey, author, newTx);
-            breej.sendTransaction(newTx, function (err, response) { if (err === null) { res.send({ error: false, link: permlink }); } else { res.send({ error: true, message: err['error'] }); } })
+            breej.sendTransaction(newTx, function (err, response) { if (err === null) { res.send({ error: false, link: permlink, author:author }); } else { res.send({ error: true, message: err['error'] }); } })
           }
         })
       }else if(req.body.type == '2') {
-        const file = req.files.file;const fileName = escape(trim(req.body.filename));const filePath = path.resolve('files/'+fileName);
+        const file = req.files.file;const fileName = escape(req.body.filename);const filePath = path.resolve('files/'+fileName);
         file.mv(filePath, async (err) => {
           if (err) {return res.send({error: true, message: 'IPFS issues for image uploading'});}
           const fileHash = await addFile(fileName, filePath)
@@ -89,7 +89,7 @@ async function post(req, res) {
           breej.getAccount(author, function (error, account) {
             if (breej.privToPub(wifKey) !== account.pub) {res.send({ error: true, message: 'Unable to validate user' });
             } else { newTx = breej.sign(wifKey, author, newTx);
-              breej.sendTransaction(newTx, function (err, response) { if (err === null) { res.send({ error: false, link: permlink }); } else { res.send({ error: true, message: err['error'] }); } })
+              breej.sendTransaction(newTx, function (err, response) { if (err === null) { res.send({ error: false, link: permlink, author:author }); } else { res.send({ error: true, message: err['error'] }); } })
             }
           })
         })
@@ -103,7 +103,7 @@ async function post(req, res) {
             if (breej.privToPub(wifKey) !== account.pub) {res.send({ error: true, message: 'Unable to validate user' });
             } else { newTx = breej.sign(wifKey, author, newTx);
               breej.sendTransaction(newTx, function (err, response) {
-                if (err === null) { res.send({ error: false, link: permlink }); } else { res.send({ error: true, message: err['error'] }); }
+                if (err === null) { res.send({ error: false, link: permlink,author:author }); } else { res.send({ error: true, message: err['error'] }); }
               })
             }
           })
@@ -117,7 +117,7 @@ async function post(req, res) {
             if (breej.privToPub(wifKey) !== account.pub) {res.send({ error: true, message: 'Unable to validate user' });
             } else { newTx = breej.sign(wifKey, author, newTx);
               breej.sendTransaction(newTx, function (err, response) {
-                if (err === null) { res.send({ error: false, link: permlink }); } else { res.send({ error: true, message: err['error'] }); }
+                if (err === null) { res.send({ error: false, link: permlink, author: author });} else { res.send({ error: true, message: err['error'] }); }
               })
             }
           })
@@ -131,7 +131,7 @@ async function post(req, res) {
               if (breej.privToPub(wifKey) !== account.pub) {res.send({ error: true, message: 'Unable to validate user' });
               } else { newTx = breej.sign(wifKey, author, newTx);
                   breej.sendTransaction(newTx, function (err, response) {
-                  if (err === null) { res.send({ error: false, link: permlink }); } else { res.send({ error: true, message: err['error'] }); }
+                  if (err === null) { res.send({ error: false, link: permlink, author: author }); } else { res.send({ error: true, message: err['error'] }); }
                   })
               }
           })

@@ -316,7 +316,7 @@ router.post('/transfer', async (req, res) => {
         });
       }
     });
-  } else { res.send({ error: true, message: 'phew.. User Validation Fails' }); }
+  } else { res.send({ error: true, message: 'phew.. User Validation Fails. You must be login' }); }
 });
 
 router.post('/boost', async (req, res, next) => {
@@ -337,7 +337,7 @@ router.post('/boost', async (req, res, next) => {
           breej.sendTransaction(signedTx, (error, result) => { if (error === null) { res.send({ error: false }); } else { res.send({ error: true, message: error['error'] }); } })
         }
     });
-  } else { res.send({ error: true, message: 'phew.. User Validation Fails' }); }  
+  } else { res.send({ error: true, message: 'phew.. User Validation Fails. You must login' }); }  
 });
 
 router.post('/withdraw', async (req, res) => {
@@ -362,7 +362,7 @@ router.post('/withdraw', async (req, res) => {
         breej.sendTransaction(signedTx, (error, result) => { if (error === null) { res.send({ error: false }); } else { res.send({ error: true, message: error['error'] }); } })
       }
     });
-  } else { res.send({ error: true, message: 'phew.. User Validation Fails' }); }
+  } else { res.send({ error: true, message: 'phew.. User Validation Fails. You must login' }); }
 });
 
 router.get('/tos', async (req, res) => {let nTags = await fetchTags(); if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); let act = userAPI.data; res.render('common/tos', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: noticeAPI.data.count }); } else { loguser = ""; res.render('common/tos', { trendingTags: nTags, loguser: loguser, category: category }); } });
