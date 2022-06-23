@@ -137,7 +137,7 @@ async function post(req, res) {
           })
         }
       }
-    } else { res.send({ error: true, message: 'phew.. User Validation Fails' }); }
+    } else { res.send({ error: true, message: 'phew.. User Validation Fails. You must be logi' }); }
   } catch (err) { console.log(err); res.send({ error: true, message: err }) }
 }
 

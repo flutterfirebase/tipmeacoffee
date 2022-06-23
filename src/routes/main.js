@@ -102,8 +102,8 @@ router.get('/notifications', async (req, res) => {
   } else { res.redirect('/welcome');}
 })
 
-router.get('/lpmining', async (req, res, next) => {res.locals.page = "mining"; let nTags = await fetchTags();
-  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); let act = userAPI.data; res.render('lpmining', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: noticeAPI.data.count }); } else { loguser = ""; res.render('lpmining', { trendingTags: nTags, loguser: loguser, category: category }); }
+router.get('/affiliates', async (req, res, next) => {res.locals.page = "mining"; let nTags = await fetchTags();
+  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); let act = userAPI.data; res.render('affiliates', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: noticeAPI.data.count }); } else { loguser = ""; res.render('affiliates', { trendingTags: nTags, loguser: loguser, category: category }); }
 })
 
 router.get('/staking', async (req, res, next) => { res.locals.title = "TipMeACoffee Staking - Earn BNB - Top DeFi Project"; res.locals.page = "staking"; let nTags = await fetchTags();
