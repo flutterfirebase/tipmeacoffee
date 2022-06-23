@@ -22,7 +22,7 @@ $('.btn_unfollow_catg').click(function() {
 $(".back_btn").click(function (){window.history.back();});
 $("#main_login_btn").click(function (){window.location.href = '/welcome';});
 $(".stk_page").click(function (){window.open('https://tmac.finance/staking', '_blank')});
-$(".farm_page").click(function (){window.open('https://tmac.finance/farming', '_blank')});
+$(".farm_page").click(function (){window.open('https://tipmeacoffee.help', '_blank')});
 $('#logout_btn, #logout_btn_inn').click(function(){$.ajax({type: 'POST',data: JSON.stringify({}),contentType: 'application/json',url: '/logout',success: function(data) {if (data.error == false);toastr['success']("Logout Success");setTimeout(function(){window.location.href = '/';}, 300);} }); })
 
 $('.login_btn').click(function() {
