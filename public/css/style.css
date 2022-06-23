@@ -3674,7 +3674,7 @@ body.dark_mode .reward_pool {
 
 .logo_img {
 	/*content: url(https://img.icons8.com/material-outlined/36/1da1f2/menu--v1.png);*/
-	content: url(/images/logo-01.png);
+	content: url(/images/logo-main.png);
 	background-repeat: no-repeat;
 	width: 30px
 }
