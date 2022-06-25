@@ -33,7 +33,7 @@ $('.trans_btn').click(function() {
 });
 
 $('.boost_post_btn').click(function() {
-    ('.boost_btn_txt').html('Processing...');$('.boost_post_btn').attr("disabled", true);
+    $('.boost_btn_txt').html('Processing...');$('.boost_post_btn').attr("disabled", true);
     let boost_amount=$("#boost_amount").val();let boost_url=$("#boost_url").val();
     if (boost_url==''){ $("#boost_url").css("border-color", "RED");toastr.error('phew... Enter URL of POST to Boost');$('.boost_btn_txt').html('Boost');$('.boost_post_btn').attr("disabled", false);return false;}
     if ((boost_amount=='')){ $("#boost_amount").css("border-color", "RED");toastr.error('phew... Bid value empty');$('.boost_btn_txt').html('Boost');$('.boost_post_btn').attr("disabled", false);return false;}
