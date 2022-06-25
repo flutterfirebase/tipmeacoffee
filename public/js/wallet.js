@@ -9,6 +9,10 @@ $(".boost-close").click(function(){$(".modal-boost").hide();});
 $('.withd_btn').click(function(e) {  e.preventDefault();$(".modal-widr").show();});
 $(".widr-close").click(function(){$(".modal-widr").hide();});
 $('#widr_amt').keyup(function() {var dInput = this.value; $('.pay_amt').html((0.99 * dInput).toFixed(4))})
+function isValidURL(string) {
+  var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+  return (res !== null)
+};
 $('.widr_tok_btn').click(function() {
     $('.widr_btn_txt').html('processing...');$('.widr_tok_btn').attr("disabled", true);
     let widr_amt=$("#widr_amt").val();let wid_address=$("#bsc_address").val();
