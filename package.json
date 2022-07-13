@@ -40,7 +40,7 @@
     "pretty-url": "^0.1.1",
     "random-string": "^0.2.0",
     "randomstring": "^1.2.2",
-    "request-ip": "^2.2.0",
+    "request-ip": "^3.3.0",
     "slugify": "^1.6.5",
     "speakingurl": "^14.0.1",
     "stringz": "^2.1.0",
