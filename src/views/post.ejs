@@ -29,10 +29,10 @@
                 <div class="card-content-info card_home_tags"><%- metatags.toString() %></div>
                 <div class="post-image-wrapper"><a href="/post/<%- article.author %>/<%- article.link %>"><div class="card-image-link"><iframe width="100%" height="auto" style="border: none;border-radius: 14px;min-height: 255px;" src="https://youtube.com/embed/<%-article.json.videoid%>?mute=1"></iframe></div></a></div>
                 <div class="post-link"><a href="<%- article.json.url %>" target="_blank" rel="noopener noreferrer"><%- domain %></a></div>
-                <%}else if(article.json.type==0){%><div class="card-content-info" class="card_home_title"><h1 class="post_title"><a href="/post/<%- article.author %>/<%- article.link %>"><%- article.json.title %></a></h1></div>
+                <%}else if(article.json.type==0){if(!article.json.image || article.json.image === undefined){var iimg='/images/img-tmac.png';}else{var iimg=article.json.image;};%><div class="card-content-info" class="card_home_title"><h1 class="post_title"><a href="/post/<%- article.author %>/<%- article.link %>"><%- article.json.title %></a></h1></div>
                 <div class="post-content"><p><%- article.json.body %></p></div>
                 <div class="card-content-info card_home_tags"><%- metatags.toString() %></div>
-                <div class="post-image-wrapper"><a href="/post/<%- article.author %>/<%- article.link %>"><div class="card-image-link"><img alt="<%- article.link %>" src="<%- article.json.image %>"></div></a></div>
+                <div class="post-image-wrapper"><a href="/post/<%- article.author %>/<%- article.link %>"><div class="card-image-link"><img alt="<%- article.link %>" src="<%- iimg %>"></div></a></div>
             <div class="post-link"><a href="<%- article.json.url %>" target="_blank" rel="noopener noreferrer"><%- domain %></a></div>
               <%}%>
             <%}else{%><div class="card-content-info" class="card_home_title"><h1 class="post_title"><a href="/post/<%- article.author %>/<%- article.link %>"><%- article.json.title %></a></h1></div>
