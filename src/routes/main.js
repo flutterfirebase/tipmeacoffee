@@ -86,7 +86,10 @@ router.get('/wallet', async (req, res) => {res.locals.page = "wallet";
 })
 
 router.get('/share', async (req, res) => {res.locals.page = "share";let token = req.cookies.token;
-  if (!token || !await validateToken(req.cookies.breeze_username, req.cookies.token)) { res.redirect('/welcome'); } else { loguser = req.cookies.breeze_username; let actAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`);let nTags = await fetchTags(); res.render('share', { loguser: loguser, trendingTags: nTags, acct: actAPI.data, category: category, notices: noticeAPI.data.count }) }
+  if (!token || !await validateToken(req.cookies.breeze_username, req.cookies.token)) { res.redirect('/welcome'); } else { loguser = req.cookies.breeze_username; 
+    let actAPI = await axios.get(api_url+`/account/${loguser}`); 
+    //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`);
+    let nTags = await fetchTags(); res.render('share', { loguser: loguser, trendingTags: nTags, acct: actAPI.data, category: category, notices: '0' }) }
 })
 
 router.get('/rewards', async (req, res) => {
