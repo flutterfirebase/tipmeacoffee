@@ -141,11 +141,12 @@ router.get('/explore/:kind', async (req, res, next) => {res.locals.page = "explo
 
 router.get('/feed', async (req, res, next) => {
   if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username;
-    let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); let postsAPI = await axios.get(api_url+`/categoryfeed/${loguser}`);let userAPI = await axios.get(api_url+`/account/${loguser}`); let act = userAPI.data; let nTags = await fetchTags(); let promotedAPI = await axios.get(api_url+`/promoted`); let promotedData = []; let finalData = postsAPI.data;
+    //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); 
+    let postsAPI = await axios.get(api_url+`/categoryfeed/${loguser}`);let userAPI = await axios.get(api_url+`/account/${loguser}`); let act = userAPI.data; let nTags = await fetchTags(); let promotedAPI = await axios.get(api_url+`/promoted`); let promotedData = []; let finalData = postsAPI.data;
     if (promotedAPI.data.length > 0) promotedData = promotedAPI.data.slice(0, 3).map(x => ({ ...x, __promoted: true }));
     if (promotedData.length > 0) finalData.splice(1, 0, promotedData[0]); if (promotedData.length > 1) finalData.splice(5, 0, promotedData[1]); if (promotedData.length > 2) finalData.splice(10, 0, promotedData[2]);
     let _finalData = await Promise.all(finalData.map(async (post) => { let userAPI = await axios.get(api_url+`/account/${post.author}`); return { ...post, user: userAPI.data.json } }));
-    res.render('feed', {  articles: postsAPI.data, moment: moment, trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: noticeAPI.data.count }); 
+    res.render('feed', {  articles: postsAPI.data, moment: moment, trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: '0' }); 
   } else { res.redirect('/'); }
 })
 
@@ -382,7 +383,9 @@ router.post('/withdraw', async (req, res) => {
   } else { res.send({ error: true, message: 'phew.. User Validation Fails. You must login' }); }
 });
 
-router.get('/tos', async (req, res) => {let nTags = await fetchTags(); if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); let act = userAPI.data; res.render('common/tos', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: noticeAPI.data.count }); } else { loguser = ""; res.render('common/tos', { trendingTags: nTags, loguser: loguser, category: category }); } });
+router.get('/tos', async (req, res) => {let nTags = await fetchTags(); if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); 
+  //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); 
+  let act = userAPI.data; res.render('common/tos', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: '0' }); } else { loguser = ""; res.render('common/tos', { trendingTags: nTags, loguser: loguser, category: category }); } });
 router.get('/robots.txt', function (req, res) { res.type('text/plain'); res.send("User-agent: *\nDisallow:"); });
 router.use(async (req, res) => { let nTags = await fetchTags(); if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); let act = userAPI.data; res.status(404).render('common/404', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: noticeAPI.data.count }); } else { loguser = ""; res.status(404).render('common/404', { trendingTags: nTags, loguser: loguser, category: category }); } });
 
