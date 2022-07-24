@@ -64,25 +64,33 @@ router.get('/profile/:name', async (req, res) => {
 router.get('/tags/:tag', async (req, res) => {
   let tag = req.params.tag;res.locals.title = "#"+ tag+" Updates. Latest "+ tag +" news shared on Tip";res.locals.description = "Looking for latest news and updates for #"+ tag +"? Now get all updates related to #"+ tag +" on TipMeACoffee.";let postsAPI = await axios.get(api_url+`/new?tag=${tag}`); let nTags = await fetchTags(); let _finalData = [];
   if (postsAPI.data.length > 0) _finalData = await Promise.all(postsAPI.data.map(async (post) => { let userAPI = await axios.get(api_url+`/account/${post.author}`); return { ...post, user: userAPI.data.json || false } }));
-  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let actAPI = await axios.get(api_url+`/account/${loguser}`);let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`);  res.render('tags', { articles: _finalData, moment: moment, trendingTags: nTags, calledTag: tag, loguser: loguser, acct: actAPI.data, category: category, notices: noticeAPI.data.count }) } else { loguser = ""; res.render('tags', { articles: _finalData, moment: moment, trendingTags: nTags, calledTag: tag, loguser: loguser, category: category }) }
+  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let actAPI = await axios.get(api_url+`/account/${loguser}`);
+  //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`);  
+  res.render('tags', { articles: _finalData, moment: moment, trendingTags: nTags, calledTag: tag, loguser: loguser, acct: actAPI.data, category: category, notices: '0' }) } else { loguser = ""; res.render('tags', { articles: _finalData, moment: moment, trendingTags: nTags, calledTag: tag, loguser: loguser, category: category }) }
 })
 
 router.get('/category/:catg', async (req, res) => {
   let catg = req.params.catg; let catg_title = catg.charAt(0).toUpperCase() + catg.slice(1);res.locals.title = catg_title+ " News - Latest "+ catg +" updates shared on TipMeACoffee";res.locals.description = "Latest "+ catg +" updates shared on TipMeACoffee Get latest "+ catg +" News on TipMeACoffee. Share to earn with TipMeACoffee social media.";let postsAPI = await axios.get(api_url+`/new?category=${catg}`); let nTags = await fetchTags();
   if (postsAPI.data.length > 0) _finalData = await Promise.all(postsAPI.data.map(async (post) => { let userAPI = await axios.get(api_url+`/account/${post.author}`); return { ...post, user: userAPI.data.json || false } })); else _finalData = postsAPI.data
-  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); res.render('category', { articles: _finalData, moment: moment, trendingTags: nTags, calledCatg: catg, loguser: loguser, acct: userAPI.data, category: category, notices: noticeAPI.data.count }) } else { loguser = ""; res.render('category', { articles: _finalData, moment: moment, trendingTags: nTags, calledCatg: catg, loguser: loguser, category: category }) }
+  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); 
+  //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); 
+  res.render('category', { articles: _finalData, moment: moment, trendingTags: nTags, calledCatg: catg, loguser: loguser, acct: userAPI.data, category: category, notices: '0' }) } else { loguser = ""; res.render('category', { articles: _finalData, moment: moment, trendingTags: nTags, calledCatg: catg, loguser: loguser, category: category }) }
 })
 
 router.get('/witnesses', async (req, res, next) => {
   res.locals.title = "Breeze Witnesses";res.locals.page = "witness";
   let nTags = await fetchTags(); let witnessAPI = await axios.get(api_url+`/rank/witnesses`); let approved = [];
-  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`);let act = userAPI.data; let approved = act.approves; res.render('witnesses', { witnesses: witnessAPI.data, approved: approved, trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: noticeAPI.data.count }); } else { loguser = ""; res.render('witnesses', { witnesses: witnessAPI.data, approved: approved, trendingTags: nTags, loguser: loguser, category: category }); }
+  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); 
+  //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`);
+  let act = userAPI.data; let approved = act.approves; res.render('witnesses', { witnesses: witnessAPI.data, approved: approved, trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: '0' }); } else { loguser = ""; res.render('witnesses', { witnesses: witnessAPI.data, approved: approved, trendingTags: nTags, loguser: loguser, category: category }); }
 })
 
 router.get('/wallet', async (req, res) => {res.locals.page = "wallet";
   let token = req.cookies.token; let user = req.cookies.breeze_username;
   var pricefeed = await clfeed.priceFeed.methods.latestRoundData().call();var bnbprice = ((pricefeed.answer)/1e8).toFixed(2);
-  if (token && await validateToken(req.cookies.breeze_username, token)) { let decrypted = CryptoJS.AES.decrypt(token, msgkey, { iv: iv }); let wifKey = decrypted.toString(CryptoJS.enc.Utf8); let pubKey = breej.privToPub(wifKey);let earnAPI = await axios.get(api_url+`/distributed/${user}/today`); let transferAPI = await axios.get(api_url+`/transfers/${user}`); let userAPI = await axios.get(api_url+`/account/${user}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${user}`);let nTags = await fetchTags(); res.render('wallet', { activities: transferAPI.data, acct: userAPI.data, trendingTags: nTags, loguser: user, earnToday: earnAPI, category: category,wifKey:wifKey,pubKey:pubKey, notices: noticeAPI.data.count, bnbprice: bnbprice }) } else { res.redirect('/welcome'); }
+  if (token && await validateToken(req.cookies.breeze_username, token)) { let decrypted = CryptoJS.AES.decrypt(token, msgkey, { iv: iv }); let wifKey = decrypted.toString(CryptoJS.enc.Utf8); let pubKey = breej.privToPub(wifKey);let earnAPI = await axios.get(api_url+`/distributed/${user}/today`); let transferAPI = await axios.get(api_url+`/transfers/${user}`); let userAPI = await axios.get(api_url+`/account/${user}`); 
+  //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${user}`);
+  let nTags = await fetchTags(); res.render('wallet', { activities: transferAPI.data, acct: userAPI.data, trendingTags: nTags, loguser: user, earnToday: earnAPI, category: category,wifKey:wifKey,pubKey:pubKey, notices: '0', bnbprice: bnbprice }) } else { res.redirect('/welcome'); }
 })
 
 router.get('/share', async (req, res) => {res.locals.page = "share";let token = req.cookies.token;
@@ -94,7 +102,9 @@ router.get('/share', async (req, res) => {res.locals.page = "share";let token = 
 
 router.get('/rewards', async (req, res) => {
   let nTags = await fetchTags(); let votesAPI = await axios.get(api_url+`/votestoday`);
-  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let actAPI = await axios.get(api_url+`/account/${loguser}`);let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); res.render('rewards', { loguser: loguser, trendingTags: nTags, acct: actAPI.data, todayVotes: votesAPI.data, category: category, notices: noticeAPI.data.count }) } else { loguser = ""; res.render('rewards', { loguser: loguser, trendingTags: nTags, todayVotes: votesAPI.data, category: category }) }
+  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let actAPI = await axios.get(api_url+`/account/${loguser}`);
+  //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); 
+  res.render('rewards', { loguser: loguser, trendingTags: nTags, acct: actAPI.data, todayVotes: votesAPI.data, category: category, notices: '0' }) } else { loguser = ""; res.render('rewards', { loguser: loguser, trendingTags: nTags, todayVotes: votesAPI.data, category: category }) }
 })
 
 router.get('/welcome', async (req, res) => {let token = req.cookies.token; let user = req.cookies.breeze_username;
@@ -108,34 +118,46 @@ router.get('/welcome/:name', async (req, res) => {let token = req.cookies.token;
 router.get('/trending', async (req, res) => {
   let nTags = await fetchTags(); let timeNow = new Date().getTime(); let postsTime = timeNow - 86400000; let postsAPI = await axios.get(api_url+`/trending?after=${postsTime}`);
   if (postsAPI.data.length > 0) _finalData = await Promise.all(postsAPI.data.map(async (post) => { let userAPI = await axios.get(api_url+`/account/${post.author}`); return { ...post, user: userAPI.data.json || false } }));
-  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let actAPI = await axios.get(api_url+`/account/${loguser}`);let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); res.render('trending', { articles: _finalData, moment: moment, trendingTags: nTags, loguser: loguser, acct: actAPI.data, category: category, notices:noticeAPI.data.count}) } else { loguser = ""; res.render('trending', { articles: _finalData, moment: moment, trendingTags: nTags, loguser: loguser, category: category }) }
+  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let actAPI = await axios.get(api_url+`/account/${loguser}`);
+  //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); 
+  res.render('trending', { articles: _finalData, moment: moment, trendingTags: nTags, loguser: loguser, acct: actAPI.data, category: category, notices:'0'}) } else { loguser = ""; res.render('trending', { articles: _finalData, moment: moment, trendingTags: nTags, loguser: loguser, category: category }) }
 })
 
 router.get('/notifications', async (req, res) => {
   if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { 
-    res.locals.page = "notifications"; let user = req.cookies.breeze_username;let send_data = [];let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${user}`);let historyAPI = await axios.get(api_url+`/history/${user}/0`);let actAPI = await axios.get(api_url+`/account/${user}`); let nTags = await fetchTags(); let temps = historyAPI.data;
+    res.locals.page = "notifications"; let user = req.cookies.breeze_username;let send_data = [];
+    //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${user}`);
+    let historyAPI = await axios.get(api_url+`/history/${user}/0`);let actAPI = await axios.get(api_url+`/account/${user}`); let nTags = await fetchTags(); let temps = historyAPI.data;
     temps.forEach(function (temp) { send_data.push(helper.data_process(temp)+ " " + "<a href='https://breezescan.io/#/tx/"+ temp.hash +"' target='_blank'><span class='trx_id'>" + temp.hash.substring(0,6) + "</span></a>"); });
-    res.render('notifications', { activities: send_data, acct: actAPI.data, trendingTags: nTags, loguser: user, category: category, notices:noticeAPI.data.count })
+    res.render('notifications', { activities: send_data, acct: actAPI.data, trendingTags: nTags, loguser: user, category: category, notices:'0' })
   } else { res.redirect('/welcome');}
 })
 
 router.get('/affiliates', async (req, res, next) => {res.locals.page = "mining"; let nTags = await fetchTags();
-  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); let act = userAPI.data; res.render('affiliates', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: noticeAPI.data.count }); } else { loguser = ""; res.render('affiliates', { trendingTags: nTags, loguser: loguser, category: category }); }
+  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); 
+  //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); 
+  let act = userAPI.data; res.render('affiliates', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: '0' }); } else { loguser = ""; res.render('affiliates', { trendingTags: nTags, loguser: loguser, category: category }); }
 })
 
 router.get('/staking', async (req, res, next) => { res.locals.title = "TipMeACoffee Staking - Earn BNB - Top DeFi Project"; res.locals.page = "staking"; let nTags = await fetchTags();
-  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); let act = userAPI.data; res.render('staking', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: noticeAPI.data.count }); } else { loguser = ""; res.render('staking', { trendingTags: nTags, loguser: loguser, category: category }); }
+  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); 
+  //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); 
+  let act = userAPI.data; res.render('staking', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: '0' }); } else { loguser = ""; res.render('staking', { trendingTags: nTags, loguser: loguser, category: category }); }
 })
 
 
 router.get('/explore', async (req, res, next) => {res.locals.page = "explore";
   let nTags = await fetchTags();let nTagsAll = await fetchTags(10);
-  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`);let userAPI = await axios.get(api_url+`/account/${loguser}`); let act = userAPI.data; res.render('explore', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category,trendingTagsAll: nTagsAll, kind: '', notices:noticeAPI.data.count }); } else { loguser = ""; res.render('explore', { trendingTags: nTags, loguser: loguser, category: category,trendingTagsAll: nTagsAll, kind: '', notices: '0' }); }
+  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; 
+    //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`);
+    let userAPI = await axios.get(api_url+`/account/${loguser}`); let act = userAPI.data; res.render('explore', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category,trendingTagsAll: nTagsAll, kind: '', notices:'0' }); } else { loguser = ""; res.render('explore', { trendingTags: nTags, loguser: loguser, category: category,trendingTagsAll: nTagsAll, kind: '', notices: '0' }); }
 })
 
 router.get('/explore/:kind', async (req, res, next) => {res.locals.page = "explore"; let kind = req.params.kind; let nTagsAll = await fetchTags(10); let nTags = nTagsAll.slice(0, 6);
-  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) {  loguser = req.cookies.breeze_username;  let userAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); let act = userAPI.data; 
-    res.render('explore', { trendingTags: nTags, trendingTagsAll: nTagsAll, loguser: loguser, acct: userAPI.data, kind: kind, category: category, notices: noticeAPI.data.count }); 
+  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) {  loguser = req.cookies.breeze_username;  let userAPI = await axios.get(api_url+`/account/${loguser}`); 
+  //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); 
+  let act = userAPI.data; 
+    res.render('explore', { trendingTags: nTags, trendingTagsAll: nTagsAll, loguser: loguser, acct: userAPI.data, kind: kind, category: category, notices: '0' }); 
   } else {loguser = ""; res.render('explore', {trendingTagsAll: nTagsAll, trendingTags: nTags, loguser: loguser, kind: kind,category: category, notices: '0'}); }
 })
 
@@ -387,6 +409,8 @@ router.get('/tos', async (req, res) => {let nTags = await fetchTags(); if (await
   //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); 
   let act = userAPI.data; res.render('common/tos', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: '0' }); } else { loguser = ""; res.render('common/tos', { trendingTags: nTags, loguser: loguser, category: category }); } });
 router.get('/robots.txt', function (req, res) { res.type('text/plain'); res.send("User-agent: *\nDisallow:"); });
-router.use(async (req, res) => { let nTags = await fetchTags(); if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); let act = userAPI.data; res.status(404).render('common/404', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: noticeAPI.data.count }); } else { loguser = ""; res.status(404).render('common/404', { trendingTags: nTags, loguser: loguser, category: category }); } });
+router.use(async (req, res) => { let nTags = await fetchTags(); if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let userAPI = await axios.get(api_url+`/account/${loguser}`); 
+  //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); 
+  let act = userAPI.data; res.status(404).render('common/404', { trendingTags: nTags, loguser: loguser, acct: userAPI.data, category: category, notices: '0' }); } else { loguser = ""; res.status(404).render('common/404', { trendingTags: nTags, loguser: loguser, category: category }); } });
 
 module.exports = router;
