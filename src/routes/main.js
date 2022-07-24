@@ -24,17 +24,27 @@ const validateToken = async(username, token) => {if(!username || !token) return 
 const nkey = async(token) => {try{let decrypted = CryptoJS.AES.decrypt(token, msgkey, { iv: iv }); let uKey = decrypted.toString(CryptoJS.enc.Utf8);return uKey;}catch(err){return false;} }
 var spammers = fs.readFileSync('./src/views/common/spammers.txt').toString().split("\n");
 
-router.get('', async (req, res) => { res.locals.title='Tip Me A Coffee - Social Media on Blockchain'; res.locals.description='TipMeACoffee - A social media platform built on blockchain where you share to earn TMAC tokens. Share what you like - Earn if community likes it.';
-  let index = req.query.index | 0; let postsAPI = await axios.get(api_url+`/new/${index}`); let nTags = await fetchTags(); let promotedAPI = await axios.get(api_url+`/promoted`); let promotedData = []; let finalData = postsAPI.data; 
+router.get('', async (req, res) => { 
+  res.locals.title='Tip Me A Coffee - Social Media on Blockchain'; 
+  res.locals.description='TipMeACoffee - A social media platform built on blockchain where you share to earn TMAC tokens. Share what you like - Earn if community likes it.';
+  let index = req.query.index | 0; 
+  let postsAPI = await axios.get(api_url+`/new/${index}`); 
+  let nTags = await fetchTags(); 
+  let promotedAPI = await axios.get(api_url+`/promoted`); 
+  let promotedData = []; 
+  let finalData = postsAPI.data; 
   if (promotedAPI.data.length > 0) promotedData = promotedAPI.data.slice(0, 3).map(x => ({ ...x, __promoted: true }));
   if (promotedData.length > 0) finalData.splice(1, 0, promotedData[0]); 
   if (promotedData.length > 1) finalData.splice(5, 0, promotedData[1]); 
   if (promotedData.length > 2) finalData.splice(10, 0, promotedData[2]);
   let _finalData = await Promise.all( finalData.map(async (post) => { let userAPI = await axios.get(api_url+`/account/${post.author}`); let ago = moment.utc(post.ts).fromNow(); return { ...post, user: userAPI.data.json, ago: ago } }) );
   let nPosts=await axios.get(api_url+`/new/${index}`);let iPosts=nPosts.data; let sPosts = await Promise.all( iPosts.map(async (post) => { let userAPI = await axios.get(api_url+`/account/${post.author}`); let ago = moment.utc(post.ts).fromNow(); return { ...post, user: userAPI.data.json, ago: ago } }) );
-  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let actAPI = await axios.get(api_url+`/account/${loguser}`); let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); 
-    if(index == 0){ res.render('index', { articles: _finalData, moment: moment, trendingTags: nTags, loguser: loguser, acct: actAPI.data, category: category, notices: noticeAPI.data.count }) } else {res.send({articles: sPosts, moment: moment, trendingTags: nTags, loguser: loguser, acct: actAPI.data, category: category, notices:noticeAPI.data.count}); }
-  } else { loguser = ""; if(index == 0) {res.render('index', { articles: _finalData, moment: moment, trendingTags: nTags, loguser: loguser, category: category, notices:'0' }) } else{ res.send({articles: sPosts, moment: moment, trendingTags: nTags, loguser: loguser, category: category, notices:'0'});}
+  if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { 
+    loguser = req.cookies.breeze_username; 
+    let actAPI = await axios.get(api_url+`/account/${loguser}`); 
+    //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); 
+    if(index == 0){ res.render('index', { articles: _finalData, moment: moment, trendingTags: nTags, loguser: loguser, acct: actAPI.data, category: category}) } else {res.send({articles: sPosts, moment: moment, trendingTags: nTags, loguser: loguser, acct: actAPI.data, category: category}); }
+  } else { loguser = ""; if(index == 0) {res.render('index', { articles: _finalData, moment: moment, trendingTags: nTags, loguser: loguser, category: category, notices:'0' }) } else{ res.send({articles: sPosts, moment: moment, trendingTags: nTags, loguser: loguser, category: category});}
   }
 })
 
