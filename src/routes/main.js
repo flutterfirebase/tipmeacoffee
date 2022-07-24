@@ -55,7 +55,9 @@ router.get('/profile/:name', async (req, res) => {
     if (blogAPI.data.length > 0) _finalData = await Promise.all(blogAPI.data.map(async (post) => { let userAPI = await axios.get(api_url+`/account/${post.author}`); return { ...post, user: userAPI.data.json || false } }));else _finalData = blogAPI.data
     if (likesAPI.data.length > 0) _finalDataL = await Promise.all(likesAPI.data.map(async (post) => { let userLAPI = await axios.get(api_url+`/account/${post.author}`); return { ...post, user: userLAPI.data.json || false } }));else _finalDataL = likesAPI.data
     res.locals.title= name.charAt(0).toUpperCase() + name.slice(1) +' Profile - TipMeACoffee';
-    if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let actAPI = await axios.get(api_url+`/account/${loguser}`);let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); res.render('profile', { user: userAPI.data, articles: _finalData, likes: _finalDataL, moment: moment, bw: bw, vp: vp, loguser: loguser, profName: name, trendingTags: nTags, acct: actAPI.data, category: category, notices: noticeAPI.data.count}) } else { loguser = ""; res.render('profile', { user: userAPI.data, articles: _finalData, likes: _finalDataL, moment: moment, bw: bw, vp: vp, loguser: loguser, profName: name, trendingTags: nTags, category: category}) }
+    if (await validateToken(req.cookies.breeze_username, req.cookies.token)) { loguser = req.cookies.breeze_username; let actAPI = await axios.get(api_url+`/account/${loguser}`);
+    //let noticeAPI = await axios.get(api_url+`/unreadnotifycount/${loguser}`); 
+    res.render('profile', { user: userAPI.data, articles: _finalData, likes: _finalDataL, moment: moment, bw: bw, vp: vp, loguser: loguser, profName: name, trendingTags: nTags, acct: actAPI.data, category: category, notices: '0'}) } else { loguser = ""; res.render('profile', { user: userAPI.data, articles: _finalData, likes: _finalDataL, moment: moment, bw: bw, vp: vp, loguser: loguser, profName: name, trendingTags: nTags, category: category}) }
     }})
 })
 
