@@ -94,10 +94,10 @@ async function keygen(req, res) {
                         breej.sendTransaction(signedTx, (error, result) => {
                             if (error === null) {
                                 res.send({ error: false, priv: priv });
-                                let newVTx = { type: 14, data: { receiver: post.name, amount: parseInt(90) } };
+                                let newVTx = { type: 14, data: { receiver: post.name, amount: parseInt(175) } };
                                 let signedVTx = breej.sign(privAc, 'breeze', newVTx);
                                 breej.sendTransaction(signedVTx, (error, result) => { })
-                                let newBTx = { type: 15, data: { receiver: post.name, amount: parseInt(1500) } };
+                                let newBTx = { type: 15, data: { receiver: post.name, amount: parseInt(3000) } };
                                 let signedBTx = breej.sign(privAc, 'breeze', newBTx);
                                 breej.sendTransaction(signedBTx, (error, result) => { })
                             } else { res.send({ error: true, message: error['error'] }); }
